@@ -21,6 +21,9 @@ function dayItems(data) {
 
     const daysOffset = firstDay.getDay();
 
+    firstDay.setDate(days);
+    const lastDayDate = firstDay.getDay();
+
     return (
         <div className="grid grid-cols-7 w-full mt-3 font-Kanit text-center">
             {[...Array(daysOffset)].map((e, i) => {
@@ -48,12 +51,19 @@ function dayItems(data) {
                 return (
                     <div className={`h-[45px] text-[24px] ${isToday ? 'text-crust' : ''}`} key={i}>
                         {day}
-                        {isToday ? <div className="rounded-full bg-blue w-full pt-[100%] -mt-[37px]" /> : undefined}
+                        {isToday ? <div className="rounded-lg bg-blue w-4/5 pt-[80%] -mt-[34px] m-auto" /> : undefined}
                         {density ? <div className={`rounded-full ${color} w-1/5 pt-[20%] -mt-[40px] m-auto`} /> : undefined}
                     </div>
                 );
-            }
-            )}
+            })}
+
+            {[...Array(7 - lastDayDate - 1)].map((e, i) => {
+                return (
+                    <div className="h-[45px] text-[24px] text-surface1" key={i}>
+                        {i + 1}
+                    </div>
+                )
+            })}
         </div>
     );
 }
@@ -117,40 +127,43 @@ function listEvents(data) {
     }
 
     return (
-        <div>
-            <div className="m-2 font-bold leading-tight font-Kanit">
+        <div className="relative h-[95%] truncate ">
+            <div className="m-2 font-bold leading-tight font-Kanit h-full absolute">
                 {
-                    todayEvents.length ? <div>
-                        <p>{todayEvents.length} | Today</p>
-                        {todayEvents.map((e, i) => (
-                            <div key={e.name} className="mb-3">
-                                <p className="truncate">- {e.name}</p>
-                                <p>{formattedDate(e.start.date)}</p>
-                            </div>
-                        ))}
-                    </div> : undefined
+                    todayEvents.length ?
+                        <div>
+                            <p className="text-red">{todayEvents.length} | Today</p>
+                            {todayEvents.map((e, i) => (
+                                <div key={e.name} className="mb-3 ">
+                                    <p className="truncate">- {e.name}</p>
+                                    <p>{formattedDate(e.start.date)}</p>
+                                </div>
+                            ))}
+                        </div> : undefined
                 }
                 {
-                    tomorrowEvents.length ? <div>
-                        <p>{tomorrowEvents.length} | Tomorrow</p>
-                        {tomorrowEvents.map((e, i) => (
-                            <div key={e.name} className="mb-3">
-                                <p className="truncate">- {e.name}</p>
-                                <p>{formattedDate(e.start.date)}</p>
-                            </div>
-                        ))}
-                    </div> : undefined
+                    tomorrowEvents.length ?
+                        <div>
+                            <p className="text-yellow">{tomorrowEvents.length} | Tomorrow</p>
+                            {tomorrowEvents.map((e, i) => (
+                                <div key={e.name} className="mb-3">
+                                    <p className="truncate">- {e.name}</p>
+                                    <p>{formattedDate(e.start.date)}</p>
+                                </div>
+                            ))}
+                        </div> : undefined
                 }
                 {
-                    upcomingEvents.length ? <div>
-                        <p>{upcomingEvents.length} | Upcoming</p>
-                        {upcomingEvents.map((e, i) => (
-                            <div key={e.name} className="mb-3">
-                                <p className="truncate">- {e.name}</p>
-                                <p>{formattedDate(e.start.date)}</p>
-                            </div>
-                        ))}
-                    </div> : undefined
+                    upcomingEvents.length ?
+                        <div>
+                            <p className="text-green">{upcomingEvents.length} | Upcoming</p>
+                            {upcomingEvents.map((e, i) => (
+                                <div key={e.name} className="mb-3">
+                                    <p className="truncate">- {e.name}</p>
+                                    <p>{formattedDate(e.start.date)}</p>
+                                </div>
+                            ))}
+                        </div> : undefined
                 }
             </div>
         </div>
@@ -201,7 +214,7 @@ export default function Calendar() {
                     </div>
                 </div>
                 <div className="w-2/5">
-                    <div className="m-3 border-2 border-overlay2 rounded-sm w-[calc(100%-24px)] h-[calc(100%-24px)]">
+                    <div className="m-3 border-2 border-overlay2 rounded-sm w-[calc(100%-24px)] h-[calc(100%-24px)] truncate">
                         {listEvents(events)}
                     </div>
                 </div>
