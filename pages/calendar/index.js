@@ -176,6 +176,8 @@ export default function Calendar() {
     const [error, setError] = useState(false);
 
     useEffect(() => {
+        console.log('Second, register');
+
         const fetchData = async () => {
             const data = await fetch('/api/calendar/list');
             const json = await data.json();

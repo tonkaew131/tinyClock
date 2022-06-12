@@ -89,9 +89,9 @@ export default function Home() {
             window.removeEventListener('touchend', handleTouchEnd);
 
             // For Desktop
-            window.addEventListener('mousedown', handleMouseStart);
-            window.addEventListener('mousemove', handleMouseMove);
-            window.addEventListener('mouseup', handleTouchEnd);
+            window.removeEventListener('mousedown', handleMouseStart);
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleTouchEnd);
         };
     }, [page]);
 
