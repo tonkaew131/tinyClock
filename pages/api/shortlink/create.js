@@ -63,6 +63,16 @@ export default async function handler(req, res) {
     }
 
     shortLinks = JSON.parse(shortLinks);
+    if (url in Object.values(shortLinks)) {
+        let key = Object.keys(shortLinks).find(key => shortLinks[key] === url);
+
+        return res.status(200).json({
+            data: {
+                url: `${URL}/s/${shortLinks[key]}`
+            }
+        })
+    }
+
     var genURL = randomURL();
     while (genURL in shortLinks) genURL = randomURL();
 

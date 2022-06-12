@@ -3,12 +3,14 @@ import Head from 'next/head'
 
 import Clock from './clock'
 import Calendar from './calendar';
+import Spotify from './spotify';
 
 export default function Home() {
     const [page, setPage] = useState(0);
     const pages = [
         <Clock key="Clock" />,
         <Calendar key="Calendar" />,
+        <Spotify key="Spotify" />,
     ];
 
     function nextPage() {
