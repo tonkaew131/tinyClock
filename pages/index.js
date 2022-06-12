@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Head from 'next/head'
 
 import Clock from './clock'
@@ -6,6 +6,9 @@ import Calendar from './calendar';
 import Spotify from './spotify';
 
 export default function Home() {
+    // const devMode = process.env.APP_ENV == 'development' ? true : false;
+    const devMode = false;
+
     const [page, setPage] = useState(0);
     const pages = [
         <Clock key="Clock" />,
@@ -14,49 +17,86 @@ export default function Home() {
     ];
 
     function nextPage() {
+        if (devMode) console.log('nextPage', page);
+
         if (page >= (pages.length - 1)) return setPage(0);
         return setPage(page + 1);
     }
 
     function previousPage() {
+        if (devMode) console.log('previousPage', page);
+
         if (page == 0) return setPage(pages.length - 1);
         return setPage(page - 1);
     }
 
     // Handle Swipe
-    const [touchStart, setTouchStart] = React.useState(0);
-    const [touchEnd, setTouchEnd] = React.useState(0);
+    const touchStart = useRef({ x: 0, y: 0 });
+    const touchEnd = useRef({ x: 0, y: 0 });
 
     useEffect(() => {
-        window.addEventListener('touchstart', (event) => handleTouchStart(event));
-        window.addEventListener('touchmove', (event) => handleTouchMove(event));
-        window.addEventListener('touchend', (event) => handleTouchEnd(event));
-    }, [touchStart, touchEnd]);
+        if (devMode) console.log('register');
 
-    function handleTouchStart(e) {
-        setTouchStart(e.targetTouches[0].clientX);
-    }
+        const handleTouchStart = (event) => {
+            if (devMode) console.log('handleTouchStart');
+            touchStart = { x: event.targetTouches[0].clientX, y: event.targetTouches[0].clienY };
+        };
 
-    function handleTouchMove(e) {
-        setTouchEnd(e.targetTouches[0].clientX);
-    }
+        const handleTouchMove = (event) => {
+            if (devMode) console.log('handleTouchMove');
+            touchEnd = { x: event.targetTouches[0].clientX, y: event.targetTouches[0].clienY };
+        };
 
-    function handleTouchEnd() {
-        const swipeSensitivity = 250;
+        const handleTouchEnd = (event) => {
+            if (devMode) console.log(`handleTouchEnd ${touchStart.x - touchEnd.x}`);
+            const swipeSensitivity = 200;
 
-        if (touchStart - touchEnd > swipeSensitivity) {
-            // do your stuff here for left swipe
-            nextPage();
-        }
+            if (touchStart.x - touchEnd.x > swipeSensitivity) {
+                nextPage();
+            }
 
-        if (touchStart - touchEnd < (swipeSensitivity * -1)) {
-            // do your stuff here for right swipe
-            previousPage();
-        }
-    }
+            if (touchStart.x - touchEnd.x < (swipeSensitivity * -1)) {
+                previousPage();
+            }
+        };
+
+        const handleMouseStart = (event) => {
+            if (devMode) console.log('handleMouseStart');
+            touchStart = { x: event.clientX, y: event.clienY };
+        };
+
+        const handleMouseMove = (event) => {
+            if (devMode) console.log('handleMouseMove');
+            touchEnd = { x: event.clientX, y: event.clienY };
+        };
+
+        // For Mobile
+        window.addEventListener('touchstart', handleTouchStart);
+        window.addEventListener('touchmove', handleTouchMove);
+        window.addEventListener('touchend', handleTouchEnd);
+
+        // For Desktop
+        window.addEventListener('mousedown', handleMouseStart);
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleTouchEnd);
+
+        return () => {
+            if (devMode) console.log('unregister');
+
+            // For Mobile
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchmove', handleTouchMove);
+            window.removeEventListener('touchend', handleTouchEnd);
+
+            // For Desktop
+            window.addEventListener('mousedown', handleMouseStart);
+            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('mouseup', handleTouchEnd);
+        };
+    }, [page]);
 
     return (
-        <div>
+        <div className="pointer-events-none">
             <Head>
                 <title>tinyClock</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
