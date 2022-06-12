@@ -7,8 +7,11 @@ https://github.com/catppuccin/catppuccin
 
 Features
 - Working On:
+    - Calendar
 - Done:
     - Clock
-    - Calendar
 - Plan:
     - Spotify
+    - Weather
+    - Stocks price # For Wansai
+    - PC Performance

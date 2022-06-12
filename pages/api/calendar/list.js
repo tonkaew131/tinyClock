@@ -78,9 +78,24 @@ export default async function handler(req, res) {
         });
     }
 
+    let eventDensity = {};
+    const date = new Date();
+    for (let i = 0; i < events.length; i++) {
+        const eventDate = new Date(events[i].start.dateTime || events[i].start.date);
+
+        if ((eventDate.getFullYear() == date.getFullYear()) && (eventDate.getMonth() == date.getMonth())) {
+            if (eventDate.getDate() in eventDensity) {
+                eventDensity[eventDate.getDate()] += 1;
+            } else {
+                eventDensity[eventDate.getDate()] = 1;
+            }
+        }
+    }
+
     return res.status(200).json({
         data: {
-            events: events
+            events: events,
+            event_density: eventDensity
         }
     });
 }

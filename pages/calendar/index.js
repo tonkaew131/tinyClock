@@ -8,24 +8,48 @@ function formattedMonth() {
     return `${months[date.getMonth()]} ${date.getFullYear()}`;
 }
 
-function dayItems(events) {
+function dayItems(data) {
+    let eventDensity = {}
+    if (data) eventDensity = data.event_density;
+
     const date = new Date();
     const firstDay = new Date(date.getTime());
     firstDay.setDate(1);
 
     const days = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    const lastMonthDays = new Date(date.getMonth() == 0 ? date.getFullYear() - 1 : date.getFullYear(), date.getMonth() == 0 ? 12 : date.getMonth(), 0).getDate();
+
     const daysOffset = firstDay.getDay();
 
     return (
-        <div className="grid grid-cols-7 w-full mt-3">
-            {[...Array(daysOffset)].map((e, i) => <div key={i} />)}
+        <div className="grid grid-cols-7 w-full mt-3 font-Kanit text-center">
+            {[...Array(daysOffset)].map((e, i) => {
+                return (
+                    <div className="h-[45px] text-[24px] text-surface1" key={i}>
+                        {lastMonthDays + i - daysOffset + 1}
+                    </div>
+                )
+            })}
+
             {[...Array(days)].map((e, i) => {
                 let day = i + 1;
                 let isToday = day == date.getDate();
+
+                let density = (day in eventDensity) ? eventDensity[day] : 0;
+                let color = 'bg-blue';
+                if (density == 1) {
+                    color = 'bg-green';
+                } else if (density == 2) {
+                    color = 'bg-yellow';
+                } else if (density >= 3) {
+                    color = 'bg-red';
+                }
+
                 return (
-                    <div className={`h-[45px] text-[24px] ${isToday ? 'text-crust' : ''} font-Kanit text-center`} key={i}>
+                    <div className={`h-[45px] text-[24px] ${isToday ? 'text-crust' : ''}`} key={i}>
                         {day}
                         {isToday ? <div className="rounded-full bg-blue w-full pt-[100%] -mt-[37px]" /> : undefined}
+                        {density ? <div className={`rounded-full ${color} w-1/5 pt-[20%] -mt-[40px] m-auto`} /> : undefined}
                     </div>
                 );
             }
@@ -48,9 +72,24 @@ function formattedDate(date) {
     return result;
 }
 
-function listEvents(events) {
-    if (!events) return (<div className="h-full flex justify-center items-center font-Kanit text-2xl text-subtext0">Loading...</div >);
-    if (events.length == 0) return (<div className="h-full flex justify-center items-center font-Kanit text-2xl text-subtext0">No Events</div >);
+function listEvents(data) {
+    if (!data) {
+        return (
+            <div className="h-full flex justify-center items-center font-Kanit text-2xl text-subtext0">
+                Loading...
+            </div >
+        );
+    }
+
+    const events = data.events;
+    if (events.length == 0) {
+        return (
+            <div className="h-full flex justify-center items-center font-Kanit text-2xl text-subtext0">
+                No Events
+            </div >
+        );
+    }
+
     const date = new Date();
 
     let todayEvents = [];
@@ -67,6 +106,10 @@ function listEvents(events) {
 
             else if (eventDate.getDate() == (date.getDate() + 1)) {
                 tomorrowEvents.push(events[i]);
+            }
+
+            else {
+                upcomingEvents.push(events[i]);
             }
         } else {
             upcomingEvents.push(events[i]);
@@ -133,15 +176,14 @@ export default function Calendar() {
                 if (data.status != 200) return setError(true);
                 json = await data.json();
 
-                console.log(json.data.url);
                 return setRedirect(json.data.url);
             }
 
             if (data.status == 200) {
-                return setEvents(json.data.events);
+                return setEvents(json.data);
             }
 
-            console.log(json);
+            console.log(json); // For Error
             return setError(true);
         };
 
