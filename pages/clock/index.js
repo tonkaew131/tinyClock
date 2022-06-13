@@ -32,7 +32,7 @@ export default function Clock() {
     }, 1000);
 
     return (
-        <div className="bg-base text-text w-screen h-screen flex justify-center items-center select-none">
+        <div className="bg-base text-text w-screen h-screen flex justify-center items-center select-none pointer-events-none">
             <div className="text-center leading-none">
                 <p className="text-[175px] font-Oswald">{time}</p>
                 <div className="h-[3px] w-[70vw] bg-sapphire rounded-full mx-auto my-3" />

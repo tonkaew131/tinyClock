@@ -52,7 +52,7 @@ function dayItems(data) {
                     <div className={`h-[45px] text-[24px] ${isToday ? 'text-crust' : ''}`} key={i}>
                         {day}
                         {isToday ? <div className="rounded-lg bg-blue w-4/5 pt-[80%] -mt-[34px] m-auto" /> : undefined}
-                        {density ? <div className={`rounded-full ${color} ${isToday ? '-mt-[45px] w-[21%] pt-[21%]':'-mt-[40px] w-1/5 pt-[20%]'} m-auto`} /> : undefined}
+                        {density ? <div className={`rounded-full ${color} ${isToday ? '-mt-[45px] w-[21%] pt-[21%]' : '-mt-[40px] w-1/5 pt-[20%]'} m-auto`} /> : undefined}
                     </div>
                 );
             })}
@@ -176,7 +176,7 @@ export default function Calendar() {
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        console.log('Second, register');
+        console.log('register Calender');
 
         const fetchData = async () => {
             const data = await fetch('/api/calendar/list');
@@ -206,7 +206,7 @@ export default function Calendar() {
     }, []);
 
     return (
-        <div className="select-none">
+        <div className="select-none pointer-events-none">
             <div className={`${redirect ? 'blur bg-slate-400' : ''} transition-all bg-base text-text w-screen h-screen flex`}>
                 <div className="w-3/5">
                     <div className="m-3 border-2 border-overlay2 rounded-sm w-[calc(100%-12px)] h-[calc(100%-24px)] mr-0">

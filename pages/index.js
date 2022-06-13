@@ -35,39 +35,46 @@ export default function Home() {
     const touchEnd = useRef({ x: 0, y: 0 });
 
     useEffect(() => {
-        if (devMode) console.log('register');
+        console.log('registe Swipe handler');
 
         const handleTouchStart = (event) => {
             if (devMode) console.log('handleTouchStart');
-            touchStart = { x: event.targetTouches[0].clientX, y: event.targetTouches[0].clienY };
+            touchEnd.current = { x: 0, y: 0 };
+            touchStart.current = { x: event.targetTouches[0].clientX, y: event.targetTouches[0].clienY };
         };
 
         const handleTouchMove = (event) => {
-            if (devMode) console.log('handleTouchMove');
-            touchEnd = { x: event.targetTouches[0].clientX, y: event.targetTouches[0].clienY };
+            if (devMode) console.log('handleTouchMove')
+            touchEnd.current = { x: event.targetTouches[0].clientX, y: event.targetTouches[0].clienY };
         };
 
         const handleTouchEnd = (event) => {
-            if (devMode) console.log(`handleTouchEnd ${touchStart.x - touchEnd.x}`);
-            const swipeSensitivity = 200;
+            if (touchEnd.current.x == 0 && touchEnd.current.y == 0) return;
 
-            if (touchStart.x - touchEnd.x > swipeSensitivity) {
+            const deltaX = touchStart.current.x - touchEnd.current.x;
+            if (devMode) console.log(`handleTouchEnd ${deltaX}`);
+            const swipeSensitivity = 175;
+
+            if (deltaX > swipeSensitivity) {
                 nextPage();
             }
 
-            if (touchStart.x - touchEnd.x < (swipeSensitivity * -1)) {
+            if (deltaX < (swipeSensitivity * -1)) {
                 previousPage();
             }
+
+            touchStart.current = { x: 0, y: 0 };
+            touchEnd.current = { x: 0, y: 0 };
         };
 
         const handleMouseStart = (event) => {
             if (devMode) console.log('handleMouseStart');
-            touchStart = { x: event.clientX, y: event.clienY };
+            touchStart.current = { x: event.clientX, y: event.clienY };
         };
 
         const handleMouseMove = (event) => {
             if (devMode) console.log('handleMouseMove');
-            touchEnd = { x: event.clientX, y: event.clienY };
+            touchEnd.current = { x: event.clientX, y: event.clienY };
         };
 
         // For Mobile
@@ -81,7 +88,7 @@ export default function Home() {
         window.addEventListener('mouseup', handleTouchEnd);
 
         return () => {
-            if (devMode) console.log('unregister');
+            console.log('unregister Swipe handler');
 
             // For Mobile
             window.removeEventListener('touchstart', handleTouchStart);
@@ -96,7 +103,7 @@ export default function Home() {
     }, [page]);
 
     return (
-        <div className="pointer-events-none">
+        <div className="touch-manipulation">
             <Head>
                 <title>tinyClock</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
