@@ -5,13 +5,14 @@ Get Google API Credentials at https://console.cloud.google.com/apis/credentials
 
 https://github.com/catppuccin/catppuccin
 
+Stocks price notify # For Wansai
+
 Features
 - Working On:
-    - Calendar
+    - Spotify
 - Done:
     - Clock
+    - Calendar
 - Plan:
-    - Spotify
     - Weather
-    - Stocks price # For Wansai
     - PC Performance
