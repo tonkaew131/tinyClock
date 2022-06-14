@@ -13,6 +13,12 @@ function progressBar(percent) {
                 }}
                 className="w-[10px] h-[10px] rounded-full bg-white absolute left-[34px] top-[-4px] ease-linear transition-all"
             />
+            <div
+                style={{
+                    width: `${10 / 12 * percent}%`
+                }}
+                className="bg-white h-[3px] rounded-full m-auto ml-10 top-0 absolute"
+            />
         </div>
     );
 }
