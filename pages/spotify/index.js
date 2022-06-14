@@ -41,7 +41,7 @@ export default function Spotify() {
 
     const [progressPercent, setProgressPercent] = useState(0);
 
-    const [songName, setSongName] = useState('SONG_NAME');
+    const [songName, setSongName] = useState('Nothing playing');
     const [artist, setArtist] = useState('Artist');
     const [albumCover, setAlbumCover] = useState('/placeholder_record.svg');
 
@@ -60,7 +60,7 @@ export default function Spotify() {
                 var data = await fetch('/api/spotify/player/get');
                 var json = await data.json();
             } catch (error) {
-                setSongName('SONG_NAME');
+                setSongName('Nothing playing');
                 setArtist('Artist');
                 setAlbumCover('/placeholder_record.svg');
                 setPlayingState(false);
@@ -68,17 +68,16 @@ export default function Spotify() {
                 return;
             }
 
-            setSongName(json.data.body.item.name);
-            setArtist(json.data.body.item.artists.map(a => a.name).join(', '));
+            if ('error' in json) return console.log(json.error);
 
-            const albumCoverURL = json.data.body.item.album.images[0]?.url;
-            if (!albumCoverURL) albumCoverURL = '/placeholder_record.svg';
-            setAlbumCover(albumCoverURL);
+            setSongName(json.data?.body?.item?.name || 'Nothing playing');
+            setArtist((json.data?.body?.item?.artists || [{ name: 'Artist' }]).map(a => a.name).join(', '));
 
-            setPlayingState(json.data.body.is_playing);
+            setAlbumCover(json.data?.body?.item?.album?.images[0]?.url || '/placeholder_record.svg');
+            setPlayingState(json.data.body?.is_playing || false);
 
-            const _progress = json.data.body.progress_ms;
-            const _duration = json.data.body.item.duration_ms;
+            const _progress = json.data?.body?.progress_ms || 0;
+            const _duration = json.data?.body?.item?.duration_ms || 6000000;
             const percent = _progress / _duration * 100;
             setProgressPercent(percent);
             setProgress(_progress);
