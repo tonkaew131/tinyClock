@@ -113,11 +113,11 @@ export default async function handler(req, res) {
 
             // Save new accessToken;
             try {
-                await fs.promises.writeFile(TOKEN_PATH, JSON.stringify(token));
+                await fs.promises.writeFile(SPOTIFY_TOKEN_PATH, JSON.stringify(token));
             } catch (error) {
                 return res.status(500).json({
                     error: {
-                        code: 500, message: `Error writing ${TOKEN_PATH}`
+                        code: 500, message: `Error writing ${SPOTIFY_TOKEN_PATH}`
                     }
                 });
             }

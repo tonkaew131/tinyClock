@@ -1,0 +1,17 @@
+.scroll {
+    display: inline-block;
+    white-space: nowrap;
+    animation: floatText 15s infinite linear;
+    padding-left: 100%;
+    /*Initial offset*/
+}
+
+.scroll:hover {
+    animation-play-state: paused;
+}
+
+@keyframes floatText {
+    to {
+        transform: translateX(-100%);
+    }
+}

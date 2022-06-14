@@ -1,8 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image'
 
+import styles from './../../styles/spotify.module.css';
+
 export default function Spotify() {
     const [playingState, setPlayingState] = useState(false);
+
+    const [songName, setSongName] = useState('SONG_NAME');
+    const [artist, setArtist] = useState('Artist');
+    const [albumCover, setAlbumCover] = useState('/placeholder_record.svg');
 
     function togglePlayingState() {
         setPlayingState(!playingState);
@@ -15,15 +21,23 @@ export default function Spotify() {
         const fetchData = async () => {
             console.log('Spotify API!');
 
-            // const data = await fetch('/api/spotify/player/get');
-            // const json = await data.json();
+            const data = await fetch('/api/spotify/player/get');
+            const json = await data.json();
 
-            // console.log(json.data.body.item.name);
+            setSongName(json.data.body.item.name);
+            setArtist(json.data.body.item.artists.map(a => a.name).join(', '));
+
+            const albumCoverURL = json.data.body.item.album.images[0]?.url;
+            if(!albumCoverURL) albumCoverURL = "/placeholder_record.svg";
+            setAlbumCover(albumCoverURL);
+
+            setPlayingState(json.data.body.is_playing);
         };
 
+        fetchData().catch(err => { console.log(err); });
         intervalId.current = setInterval(() => fetchData().catch(err => {
             console.log(err);
-        }), 3000);
+        }), 2000);
         // fetchData().catch(console.error());
 
         return () => {
@@ -36,9 +50,9 @@ export default function Spotify() {
             <div className="flex">
                 <div className="flex w-3/5">
                     <div className="w-full">
-                        <div className="ml-14 mt-12 mb-5">
-                            <p className="text-lg">SONG_NAME</p>
-                            <p className="text-overlay0 text-md">ARTIST</p>
+                        <div className="ml-10 mr-3 mt-11 mb-7 overflow-clip">
+                            <p className={`${false ? styles.scroll : ''} text-2xl truncate`}>{songName}</p>
+                            <p className={`${false ? styles.scroll : ''} text-overlay0 text-md truncate`}>{artist}</p>
                         </div>
                         <div className="flex">
                             <div className="w-[25px] h-[25px] relative m-auto mr-9 transition-all hover:cursor-pointer active:scale-90">
@@ -50,8 +64,8 @@ export default function Spotify() {
                                     alt="Previous"
                                 />
                             </div>
-                            <div className="w-[55px] h-[55px] bg-text rounded-full flex transition-all hover:cursor-pointer active:bg-overlay2 active:scale-95" onClick={() => togglePlayingState()}>
-                                {playingState ?
+                            <div className="w-[55px] h-[55px] bg-text rounded-full flex hover:cursor-pointer active:bg-overlay2 active:scale-95" onClick={() => togglePlayingState()}>
+                                {!playingState ?
                                     <div className="w-[22px] h-[22px] relative m-auto translate-x-[1px] pointer-events-none">
                                         <Image
                                             className=""
@@ -67,7 +81,7 @@ export default function Spotify() {
                                             src="/music_pause_icon.svg"
                                             layout="fill"
                                             objectFit="cover"
-                                            alt="Play"
+                                            alt="Pause"
                                         />
                                     </div>
                                 }
@@ -87,10 +101,11 @@ export default function Spotify() {
                 <div className="w-[150px] h-[150px] relative pointer-events-none m-auto mt-10 mr-10">
                     <Image
                         className="rounded-md"
-                        src="/placeholder_record.svg"
+                        src={albumCover}
                         alt="Album cover Image"
                         layout="fill"
                         objectFit="cover"
+                        priority
                     />
                 </div>
             </div>
