@@ -41,6 +41,9 @@ export default function Spotify() {
 
     const [progressPercent, setProgressPercent] = useState(0);
 
+    const [shuffle, setShuffle] = useState(false);
+    const [loop, setLoop] = useState(false);
+
     const [songName, setSongName] = useState('Nothing playing');
     const [artist, setArtist] = useState('Artist');
     const [albumCover, setAlbumCover] = useState('/placeholder_record.svg');
