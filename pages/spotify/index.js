@@ -6,7 +6,7 @@ import styles from './../../styles/spotify.module.css';
 function progressBar(percent) {
     return (
         <div className="relative">
-            <div className="w-10/12 bg-overlay0 h-[3px] rounded-full m-auto mt-9" />
+            <div className="w-10/12 bg-overlay0 h-[3px] rounded-full m-auto mt-8" />
             <div
                 style={{
                     marginLeft: `${(10 / 12) * percent}%`,
@@ -17,7 +17,7 @@ function progressBar(percent) {
                 style={{
                     width: `${10 / 12 * percent}%`
                 }}
-                className="bg-white h-[3px] rounded-full m-auto ml-10 top-0 absolute"
+                className="bg-white h-[3px] rounded-full m-auto ml-10 top-0 absolute ease-linear transition-all"
             />
         </div>
     );
@@ -99,7 +99,7 @@ export default function Spotify() {
             <div className="flex">
                 <div className="flex w-3/5">
                     <div className="w-full">
-                        <div className="ml-10 mr-3 mt-11 mb-7 overflow-clip">
+                        <div className="ml-11 mr-3 mt-10 mb-7 overflow-clip">
                             <p className={`${false ? styles.scroll : ''} text-2xl truncate`}>{songName}</p>
                             <p className={`${false ? styles.scroll : ''} text-overlay0 text-md truncate`}>{artist}</p>
                         </div>
@@ -147,7 +147,7 @@ export default function Spotify() {
                         </div>
                     </div>
                 </div>
-                <div className="w-[150px] h-[150px] relative pointer-events-none m-auto mt-10 mr-10">
+                <div className="w-[150px] h-[150px] relative pointer-events-none m-auto mt-8 mr-8">
                     <Image
                         className="rounded-md"
                         src={albumCover}
@@ -166,6 +166,24 @@ export default function Spotify() {
             <div className="flex text-subtext1 text-xs mx-10 mt-1">
                 <p>{formatMillis(progress)}</p>
                 <p className="m-auto mr-0">{formatMillis(duration)}</p>
+            </div>
+            <div className="flex mt-5">
+                <div className="w-7 h-7 relative ml-10 ">
+                    <Image
+                        alt="Shuffle"
+                        src="/music_shuffle_icon.svg"
+                        layout="fill"
+                        objectFit="cover"
+                    />
+                </div>
+                <div className="w-7 h-7 relative ml-5">
+                    <Image
+                        alt="Loop"
+                        src="/music_loop_icon.svg"
+                        layout="fill"
+                        objectFit="cover"
+                    />
+                </div>
             </div>
         </div >
     )

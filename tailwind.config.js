@@ -34,9 +34,9 @@ module.exports = {
         rosewater: '#f5e0dc',
       },
       fontFamily: {
-        Oswald: ['Oswald', 'sans-serif'],
         Kanit: ['Kanit', 'sans-serif'],
-        Roboto: ['Roboto', 'sans-serif'],
+        Oswald: ['Oswald', 'sans-serif'],
+        Roboto: ['Roboto', 'Kanit', 'sans-serif'],
       }
     },
   },
