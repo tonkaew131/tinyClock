@@ -14,5 +14,5 @@ Features
     - Clock
     - Calendar
 - Plan:
-    - Weather
+    - Weather, Radio
     - PC Performance
