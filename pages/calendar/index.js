@@ -93,6 +93,7 @@ function listEvents(data) {
 
     const events = data.events;
     if (events.length == 0) {
+        console.log(4, data);
         return (
             <div className="h-full flex justify-center items-center font-Kanit text-2xl text-subtext0">
                 No Events
@@ -171,7 +172,7 @@ function listEvents(data) {
 }
 
 export default function Calendar() {
-    const [events, setEvents] = useState(null);
+    const [events, setEvents] = useState();
     const [redirect, setRedirect] = useState('');
     const [error, setError] = useState(false);
 
@@ -179,8 +180,9 @@ export default function Calendar() {
         console.log('register Calender');
 
         const fetchData = async () => {
-            const data = await fetch('/api/calendar/list');
-            const json = await data.json();
+            var data = await fetch('/api/calendar/list');
+            var json = await data.json();
+
             if (data.status == 302) {
                 data = await fetch('/api/shortlink/create', {
                     body: JSON.stringify({
@@ -202,7 +204,7 @@ export default function Calendar() {
             return setError(true);
         };
 
-        fetchData().catch(console.error());
+        fetchData().catch(error => console.error(error));
     }, []);
 
     return (

@@ -69,7 +69,7 @@ export default function Spotify() {
         console.log('register Spotify');
 
         const fetchData = async () => {
-            console.log('Spotify API!');
+            console.count('Spotify API!');
 
             try {
                 var data = await fetch('/api/spotify/player/get');
@@ -83,7 +83,7 @@ export default function Spotify() {
                 return;
             }
 
-            if ('error' in json) return console.log(json.error);
+            if ('error' in json) return console.error(json.error);
 
             // context, track, off (json.data.body.repeat_state)
             // true, false (json.data.body.shuffle_state)
@@ -104,12 +104,13 @@ export default function Spotify() {
             setDuration(_duration);
         };
 
-        fetchData().catch(err => { console.log(err); });
+        fetchData().catch(err => { console.error(err); });
         intervalId.current = setInterval(() => fetchData().catch(err => {
             console.log(err);
         }), 1500);
 
         return () => {
+            console.countReset('Spotify API!');
             clearInterval(intervalId.current);
         };
     }, []);
