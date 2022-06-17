@@ -118,7 +118,7 @@ export default function Spotify() {
     return (
         <div className="bg-base w-screen h-screen text-text font-Roboto select-none">
             <div className="flex">
-                <div className="w-[150px] h-[150px] relative pointer-events-none m-auto mt-5 ml-10">
+                <div className="w-[150px] h-[150px] relative pointer-events-none m-auto mt-6 ml-10">
                     <Image
                         className="rounded-md"
                         src={albumCover}
@@ -131,7 +131,7 @@ export default function Spotify() {
 
                 <div className="flex w-3/5">
                     <div className="w-full">
-                        <div className="ml-5 mr-3 mt-7 mb-6 overflow-clip">
+                        <div className="ml-5 mr-3 mt-7 mb-6 overflow-clip w-[200px]">
                             <p className={`${false ? styles.scroll : ''} text-2xl truncate`}>{songName}</p>
                             <p className={`${false ? styles.scroll : ''} text-overlay0 text-md truncate`}>{artist}</p>
                         </div>
@@ -189,27 +189,13 @@ export default function Spotify() {
                 <p>{formatMillis(progress)}</p>
                 <p className="m-auto mr-0">{formatMillis(duration)}</p>
             </div>
-            <div className="flex mt-5 ml-11">
+            <div className="flex mt-5 ml-[72px]">
                 <div className="relative" onClick={() => toggleShuffle()}>
                     <div className="w-6 h-6 relative">
-                        <MusicShuffleIcon className={shuffle ? "fill-spotify" : ""} />
+                        <MusicShuffleIcon className={shuffle ? "fill-blue" : ""} />
                     </div>
                     {shuffle ?
-                        <div className="w-[5px] h-[5px] rounded-full bg-spotify absolute -bottom-1 left-1/2 -translate-x-1/2" />
-                        : undefined
-                    }
-                </div>
-
-                <div className="relative ml-5" onClick={() => toggleLoop()}>
-                    <div className="w-[22px] h-[22px] relative">
-                        <MusicLoopIcon className={loop != 'off' ? "fill-spotify" : ""} />
-                    </div>
-                    {loop != 'off' ?
-                        <div className="w-[5px] h-[5px] rounded-full bg-spotify absolute -bottom-1 left-1/2 -translate-x-1/2" />
-                        : undefined
-                    }
-                    {loop == 'track' ?
-                        <p className="absolute -top-[4px] left-1/2 -translate-x-1/2 text-spotify bg-base leading-none">1</p>
+                        <div className="w-[5px] h-[5px] rounded-full bg-blue absolute -bottom-1 left-1/2 -translate-x-1/2" />
                         : undefined
                     }
                 </div>
@@ -224,13 +210,18 @@ export default function Spotify() {
                 </div>
                 <div className="bg-overlay0 h-[6px] w-[148px] rounded-full m-auto ml-3 mr-0" />
 
-                <div className="relative w-7 h-7 ml-5">
-                    <Image
-                        alt="Queue"
-                        src="/music_queue_icon.svg"
-                        layout="fill"
-                        objectFit="cover"
-                    />
+                <div className="relative ml-5" onClick={() => toggleLoop()}>
+                    <div className="w-[22px] h-[22px] relative">
+                        <MusicLoopIcon className={loop != 'off' ? "fill-blue" : ""} />
+                    </div>
+                    {loop != 'off' ?
+                        <div className="w-[5px] h-[5px] rounded-full bg-blue absolute -bottom-1 left-1/2 -translate-x-1/2" />
+                        : undefined
+                    }
+                    {loop == 'track' ?
+                        <p className="absolute -top-[4px] left-1/2 -translate-x-1/2 text-blue bg-base leading-none">1</p>
+                        : undefined
+                    }
                 </div>
 
                 <div className="relative w-7 h-7 ml-5">
@@ -242,6 +233,18 @@ export default function Spotify() {
                         objectFit="cover"
                     />
                 </div>
+            </div>
+
+            <div className="absolute right-5 top-5">
+                <div className="relative w-7 h-7">
+                    <Image
+                        alt="Queue"
+                        src="/music_queue_icon.svg"
+                        layout="fill"
+                        objectFit="cover"
+                    />
+                </div>
+
             </div>
         </div>
     )
