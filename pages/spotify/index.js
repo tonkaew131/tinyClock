@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image'
 
 import styles from './../../styles/spotify.module.css';
+import MusicLoopIcon from '../../components/MusicLoopIcon';
+import MusicShuffleIcon from '../../components/MusicShuffleIcon';
 
 function progressBar(percent) {
     return (
@@ -42,7 +44,7 @@ export default function Spotify() {
     const [progressPercent, setProgressPercent] = useState(0);
 
     const [shuffle, setShuffle] = useState(false);
-    const [loop, setLoop] = useState(false);
+    const [loop, setLoop] = useState('off');
 
     const [songName, setSongName] = useState('Nothing playing');
     const [artist, setArtist] = useState('Artist');
@@ -51,6 +53,16 @@ export default function Spotify() {
     function togglePlayingState() {
         setPlayingState(!playingState);
     };
+
+    function toggleLoop() {
+        if (loop == 'off') return setLoop('context');
+        if (loop == 'context') return setLoop('track');
+        return setLoop('off');
+    };
+
+    function toggleShuffle() {
+        setShuffle(!shuffle);
+    }
 
     const intervalId = useRef();
     useEffect(() => {
@@ -72,6 +84,11 @@ export default function Spotify() {
             }
 
             if ('error' in json) return console.log(json.error);
+
+            // context, track, off (json.data.body.repeat_state)
+            // true, false (json.data.body.shuffle_state)
+            setLoop(json.data?.body?.repeat_state || 'off');
+            setShuffle(json.data?.body?.shuffle_state || false);
 
             setSongName(json.data?.body?.item?.name || 'Nothing playing');
             setArtist((json.data?.body?.item?.artists || [{ name: 'Artist' }]).map(a => a.name).join(', '));
@@ -171,23 +188,30 @@ export default function Spotify() {
                 <p className="m-auto mr-0">{formatMillis(duration)}</p>
             </div>
             <div className="flex mt-5">
-                <div className="w-7 h-7 relative ml-10 ">
-                    <Image
-                        alt="Shuffle"
-                        src="/music_shuffle_icon.svg"
-                        layout="fill"
-                        objectFit="cover"
-                    />
+                <div className="relative ml-10" onClick={() => toggleShuffle()}>
+                    <div className="w-7 h-7 relative">
+                        <MusicShuffleIcon className={shuffle ? "fill-spotify" : ""} />
+                    </div>
+                    {shuffle ?
+                        <div className="w-[5px] h-[5px] rounded-full bg-spotify absolute -bottom-1 left-1/2 -translate-x-1/2" />
+                        : undefined
+                    }
                 </div>
-                <div className="w-7 h-7 relative ml-5">
-                    <Image
-                        alt="Loop"
-                        src="/music_loop_icon.svg"
-                        layout="fill"
-                        objectFit="cover"
-                    />
+
+                <div className="relative ml-5" onClick={() => toggleLoop()}>
+                    <div className="w-7 h-7 relative">
+                        <MusicLoopIcon className={loop != 'off' ? "fill-spotify" : ""} />
+                    </div>
+                    {loop != 'off' ?
+                        <div className="w-[5px] h-[5px] rounded-full bg-spotify absolute -bottom-1 left-1/2 -translate-x-1/2" />
+                        : undefined
+                    }
+                    {loop == 'track' ?
+                        <p className="absolute -top-[6px] left-1/2 -translate-x-1/2 text-spotify bg-base">1</p>
+                        : undefined
+                    }
                 </div>
             </div>
-        </div >
+        </div>
     )
 }

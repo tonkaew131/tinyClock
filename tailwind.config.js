@@ -7,6 +7,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        spotify: '#1ed760',
         crust: '#11111b',
         mantle: '#181825',
         base: '#1e1e2e',
