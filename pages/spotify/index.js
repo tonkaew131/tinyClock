@@ -118,9 +118,20 @@ export default function Spotify() {
     return (
         <div className="bg-base w-screen h-screen text-text font-Roboto select-none">
             <div className="flex">
+                <div className="w-[150px] h-[150px] relative pointer-events-none m-auto mt-5 ml-10">
+                    <Image
+                        className="rounded-md"
+                        src={albumCover}
+                        alt="Album cover Image"
+                        layout="fill"
+                        objectFit="cover"
+                        priority
+                    />
+                </div>
+
                 <div className="flex w-3/5">
                     <div className="w-full">
-                        <div className="ml-11 mr-3 mt-10 mb-7 overflow-clip">
+                        <div className="ml-5 mr-3 mt-7 mb-6 overflow-clip">
                             <p className={`${false ? styles.scroll : ''} text-2xl truncate`}>{songName}</p>
                             <p className={`${false ? styles.scroll : ''} text-overlay0 text-md truncate`}>{artist}</p>
                         </div>
@@ -168,16 +179,6 @@ export default function Spotify() {
                         </div>
                     </div>
                 </div>
-                <div className="w-[150px] h-[150px] relative pointer-events-none m-auto mt-8 mr-8">
-                    <Image
-                        className="rounded-md"
-                        src={albumCover}
-                        alt="Album cover Image"
-                        layout="fill"
-                        objectFit="cover"
-                        priority
-                    />
-                </div>
             </div>
             {progressBar(progressPercent)}
             {/* <div className="relative">
@@ -188,9 +189,9 @@ export default function Spotify() {
                 <p>{formatMillis(progress)}</p>
                 <p className="m-auto mr-0">{formatMillis(duration)}</p>
             </div>
-            <div className="flex mt-5">
-                <div className="relative ml-10" onClick={() => toggleShuffle()}>
-                    <div className="w-7 h-7 relative">
+            <div className="flex mt-5 ml-11">
+                <div className="relative" onClick={() => toggleShuffle()}>
+                    <div className="w-6 h-6 relative">
                         <MusicShuffleIcon className={shuffle ? "fill-spotify" : ""} />
                     </div>
                     {shuffle ?
@@ -200,7 +201,7 @@ export default function Spotify() {
                 </div>
 
                 <div className="relative ml-5" onClick={() => toggleLoop()}>
-                    <div className="w-7 h-7 relative">
+                    <div className="w-[22px] h-[22px] relative">
                         <MusicLoopIcon className={loop != 'off' ? "fill-spotify" : ""} />
                     </div>
                     {loop != 'off' ?
@@ -208,12 +209,12 @@ export default function Spotify() {
                         : undefined
                     }
                     {loop == 'track' ?
-                        <p className="absolute -top-[6px] left-1/2 -translate-x-1/2 text-spotify bg-base">1</p>
+                        <p className="absolute -top-[4px] left-1/2 -translate-x-1/2 text-spotify bg-base leading-none">1</p>
                         : undefined
                     }
                 </div>
 
-                <div className="relative w-7 h-7 ml-5">
+                <div className="relative w-6 h-6 ml-5">
                     <Image
                         alt="Volume"
                         src="/music_speaker_icon.svg"
@@ -222,10 +223,21 @@ export default function Spotify() {
                     />
                 </div>
                 <div className="bg-overlay0 h-[6px] w-[148px] rounded-full m-auto ml-3 mr-0" />
+
                 <div className="relative w-7 h-7 ml-5">
                     <Image
                         alt="Queue"
                         src="/music_queue_icon.svg"
+                        layout="fill"
+                        objectFit="cover"
+                    />
+                </div>
+
+                <div className="relative w-7 h-7 ml-5">
+                    <Image
+                        className=""
+                        alt="Queue"
+                        src="/music_device_icon.svg"
                         layout="fill"
                         objectFit="cover"
                     />
