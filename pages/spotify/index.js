@@ -212,6 +212,16 @@ export default function Spotify() {
                         : undefined
                     }
                 </div>
+
+                <div className="relative w-7 h-7 ml-5">
+                    <Image
+                        alt="Volume"
+                        src="/music_speaker_icon.svg"
+                        layout="fill"
+                        objectFit="cover"
+                    />
+                </div>
+                <div className="bg-overlay0 h-[6px] w-[148px] rounded-full m-auto ml-5"/>
             </div>
         </div>
     )

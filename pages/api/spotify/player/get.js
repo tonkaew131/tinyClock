@@ -55,8 +55,8 @@ export default async function handler(req, res) {
                 });
         });
     } catch (error) {
-        var errorType = error.body.error.message;
-        var errorCode = error.body.error.code || 500;
+        var errorType = error.body?.error?.message || 'Server Error (Unknown reason)';
+        var errorCode = error.body?.error?.code || 500;
 
         const state = randomString(16);
         if (errorType == 'No token provided') {
@@ -90,7 +90,7 @@ export default async function handler(req, res) {
             });
         }
 
-        if (errorType == 'The access token expired' || errorType == 'Invalid access token') {           
+        if (errorType == 'The access token expired' || errorType == 'Invalid access token') {
             spotifyApi.setAccessToken(token.access_token);
             spotifyApi.setRefreshToken(token.refresh_token);
 

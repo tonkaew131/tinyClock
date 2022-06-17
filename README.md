@@ -17,3 +17,4 @@ Features
     - Weather
     - Radio
     - PC Performance
+    - Notification via Bluetooth
