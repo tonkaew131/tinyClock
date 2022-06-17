@@ -35,7 +35,7 @@ export default function Home() {
     const touchEnd = useRef({ x: 0, y: 0 });
 
     useEffect(() => {
-        console.log('registe Swipe handler');
+        console.log('register Swipe handler');
 
         const handleTouchStart = (event) => {
             if (devMode) console.log('handleTouchStart');

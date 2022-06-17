@@ -69,7 +69,7 @@ export default function Spotify() {
         console.log('register Spotify');
 
         const fetchData = async () => {
-            console.count('Spotify API!');
+            // console.count('Spotify API!');
 
             try {
                 var data = await fetch('/api/spotify/player/get');
@@ -110,7 +110,7 @@ export default function Spotify() {
         }), 1500);
 
         return () => {
-            console.countReset('Spotify API!');
+            // console.countReset('Spotify API!');
             clearInterval(intervalId.current);
         };
     }, []);

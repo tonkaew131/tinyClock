@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 
+function zeroPad(num, size) {
+    return num.toString().padStart(size, '0');
+}
+
 function formattedMonth() {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     const date = new Date();
-    return `${months[date.getMonth()]} ${date.getFullYear()}`;
+    return `${months[date.getMonth()]}. ${date.getMonth() + 1}/${date.getFullYear()}`;
 }
 
 function dayItems(data) {
@@ -66,10 +70,6 @@ function dayItems(data) {
             })}
         </div>
     );
-}
-
-function zeroPad(num, size) {
-    return num.toString().padStart(size, '0');
 }
 
 function formattedDate(date) {
