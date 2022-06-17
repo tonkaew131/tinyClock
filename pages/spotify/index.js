@@ -221,7 +221,15 @@ export default function Spotify() {
                         objectFit="cover"
                     />
                 </div>
-                <div className="bg-overlay0 h-[6px] w-[148px] rounded-full m-auto ml-5"/>
+                <div className="bg-overlay0 h-[6px] w-[148px] rounded-full m-auto ml-3 mr-0" />
+                <div className="relative w-7 h-7 ml-5">
+                    <Image
+                        alt="Queue"
+                        src="/music_queue_icon.svg"
+                        layout="fill"
+                        objectFit="cover"
+                    />
+                </div>
             </div>
         </div>
     )
