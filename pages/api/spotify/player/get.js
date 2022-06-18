@@ -1,4 +1,5 @@
 import config from '../../../../config';
+import Spotify from '../../../../shared/spotify';
 
 const SpotifyWebApi = require('spotify-web-api-node');
 const fs = require('fs');
@@ -19,15 +20,9 @@ function randomString(size) {
 
 export default async function handler(req, res) {
     try {
-        var credential = await fs.promises.readFile(SPOTIFY_CREDENTIAL_PATH, 'utf-8');
-        credential = JSON.parse(credential);
+        var credential = await Spotify.readCredential();
     } catch (error) {
-        return res.status(500).json({
-            error: {
-                code: 500,
-                message: `Cannot open ${SPOTIFY_CREDENTIAL_PATH}`
-            }
-        });
+        return res.status(error.code).json(error);
     }
 
     var spotifyApi = new SpotifyWebApi({
@@ -36,39 +31,25 @@ export default async function handler(req, res) {
         clientSecret: credential.client_secret
     });
 
-    try {
-        var token = await fs.promises.readFile(SPOTIFY_TOKEN_PATH, 'utf-8');
-        token = JSON.parse(token);
-    } catch (error) {
-        token = {};
-    }
-
+    var token = await Spotify.readToken();
     spotifyApi.setAccessToken(token.access_token);
 
     try {
-        var currentPlaybackState = await new Promise(function (resolve, reject) {
-            spotifyApi.getMyCurrentPlaybackState()
-                .then(function (data) {
-                    return resolve(data);
-                }, function (err) {
-                    reject(err);
-                });
-        });
+        var currentPlaybackState = await Spotify.getMyCurrentPlaybackState(spotifyApi);
     } catch (error) {
         var errorType = error.body?.error?.message || 'Server Error (Unknown reason)';
         var errorCode = error.body?.error?.code || 500;
 
-        const state = randomString(16);
+        if (errorType == 'Server Error (Unknown reason)') console.error(error);
+
+        const state = Spotify.randomString(16);
         if (errorType == 'No token provided') {
+
             // For verifying state
             try {
-                await fs.promises.writeFile(SPOTIFY_TOKEN_PATH, JSON.stringify({ access_token: token.access_token, state: state }));
+                await Spotify.writeToken({ access_token: token.access_token, state: state });
             } catch (error) {
-                return res.status(500).json({
-                    error: {
-                        code: 500, message: `Error writing ${SPOTIFY_TOKEN_PATH}`
-                    }
-                });
+                return res.status(error.code).json(error);
             }
 
             const scopes = [
@@ -94,43 +75,25 @@ export default async function handler(req, res) {
             spotifyApi.setAccessToken(token.access_token);
             spotifyApi.setRefreshToken(token.refresh_token);
 
-            var authorizationCode = await new Promise(function (resolve, reject) {
-                spotifyApi.refreshAccessToken().then(
-                    function (data) {
-                        return resolve({
-                            access_token: data.body['access_token'],
-                            refresh_token: data.body['refresh_token']
-                        });
-                    },
-                    function (err) {
-                        return reject(err);
-                    }
-                );
-            });
+            try {
+                var authorizationCode = await Spotify.refreshAccessToken(spotifyApi);
+            } catch (error) {
+                console.error(error);
+                return res.status(500).json({ error: { code: 500, message: 'Error refreshing token' } });
+            }
 
             spotifyApi.setAccessToken(authorizationCode.access_token);
             token.access_token = authorizationCode.access_token;
 
             // Save new accessToken;
             try {
-                await fs.promises.writeFile(SPOTIFY_TOKEN_PATH, JSON.stringify(token));
+                await Spotify.writeToken(token);
             } catch (error) {
-                return res.status(500).json({
-                    error: {
-                        code: 500, message: `Error writing ${SPOTIFY_TOKEN_PATH}`
-                    }
-                });
+                return res.status(error.code).json(error);
             }
 
             try {
-                var currentPlaybackState = await new Promise(function (resolve, reject) {
-                    spotifyApi.getMyCurrentPlaybackState()
-                        .then(function (data) {
-                            return resolve(data);
-                        }, function (err) {
-                            reject(err);
-                        });
-                });
+                var currentPlaybackState = await Spotify.getMyCurrentPlaybackState(spotifyApi);
             } catch (error) {
                 errorType = error.body.error.message;
                 errorCode = error.body.error.code || 500;

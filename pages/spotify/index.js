@@ -5,6 +5,7 @@ import styles from './../../styles/spotify.module.css';
 import MusicLoopIcon from '../../components/MusicLoopIcon';
 import MusicShuffleIcon from '../../components/MusicShuffleIcon';
 
+// Component
 function ProgressBar(props) {
     const percent = props.percent;
     const progress = props.progress;
@@ -34,6 +35,7 @@ function ProgressBar(props) {
     );
 }
 
+// Component
 function VolumeBar(props) {
     const percent = props.percent;
 
@@ -60,6 +62,7 @@ function VolumeBar(props) {
     );
 }
 
+// Component
 function AlbumCover(props) {
     return (
         <div className="w-[150px] h-[150px] relative pointer-events-none m-auto mt-6 ml-10">
