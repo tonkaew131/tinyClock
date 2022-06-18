@@ -2,21 +2,6 @@ import config from '../../../../config';
 import Spotify from '../../../../shared/spotify';
 
 const SpotifyWebApi = require('spotify-web-api-node');
-const fs = require('fs');
-
-const SPOTIFY_CREDENTIAL_PATH = config.spotify.credential_path;
-const SPOTIFY_TOKEN_PATH = config.spotify.token_path;
-
-function randomString(size) {
-    const CHAR_SET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-    let result = '';
-    var charactersLength = CHAR_SET.length;
-    for (var i = 0; i < size; i++) {
-        result += CHAR_SET.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
 
 export default async function handler(req, res) {
     try {
