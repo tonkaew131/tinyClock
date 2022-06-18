@@ -78,6 +78,14 @@ function AlbumCover(props) {
     );
 }
 
+function ErrorHandler(props) {
+    return (
+        <div className="z-10 backdrop-blur-md w-screen h-screen absolute flex justify-center items-center text-6xl text-center">
+            {props.error}
+        </div>
+    );
+}
+
 function zeroPad(num, size) {
     return num.toString().padStart(size, '0');
 }
@@ -89,6 +97,8 @@ function formatMillis(ms) {
 }
 
 export default function Spotify() {
+    const [error, setError] = useState();
+
     const [playingState, setPlayingState] = useState(false);
     const [volume, setVolume] = useState(50);
 
@@ -138,7 +148,13 @@ export default function Spotify() {
             }
 
             if ('error' in json) return console.error(json.error);
+            if (data.status == 302) {
+                clearInterval(intervalId.current);
+                setError('Please Setup Token');
+                return console.log(json.data?.url);
+            }
 
+            setError();
             // context, track, off (json.data.body.repeat_state)
             // true, false (json.data.body.shuffle_state)
             setLoop(json.data?.body?.repeat_state || 'off');
@@ -172,6 +188,8 @@ export default function Spotify() {
 
     return (
         <div className=" w-screen h-screen text-text font-Roboto select-none bg-gradient-to-br from-surface0 to-base">
+            {error ? <ErrorHandler error={error} /> : undefined}
+
             <div className="flex">
                 <AlbumCover src={albumCover} />
 
