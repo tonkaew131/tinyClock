@@ -41,7 +41,7 @@ function VolumeBar(props) {
 
     return (
         <div className="flex">
-            <div className="relative w-6 h-6 ml-5">
+            <div className="relative w-6 h-6 ml-5 hover:cursor-pointer active:scale-95">
                 <Image
                     alt="Volume"
                     src="/music_speaker_icon.svg"
@@ -78,6 +78,7 @@ function AlbumCover(props) {
     );
 }
 
+// Component
 function ErrorHandler(props) {
     return (
         <div className="z-10 backdrop-blur-md w-screen h-screen absolute flex justify-center items-center text-6xl text-center">
@@ -116,13 +117,13 @@ export default function Spotify() {
 
     function togglePlayingState() {
         setPlayingState(!playingState);
-    };
+    }
 
     function toggleLoop() {
         if (loop == 'off') return setLoop('context');
         if (loop == 'context') return setLoop('track');
         return setLoop('off');
-    };
+    }
 
     function toggleShuffle() {
         setShuffle(!shuffle);
@@ -249,7 +250,7 @@ export default function Spotify() {
             <ProgressBar percent={progressPercent} progress={progress} duration={duration} />
 
             <div className="flex mt-5 ml-[72px]">
-                <div className="relative" onClick={() => toggleShuffle()}>
+                <div className="relative hover:cursor-pointer active:scale-95" onClick={() => toggleShuffle()}>
                     <div className="w-6 h-6 relative">
                         <MusicShuffleIcon className={shuffle ? "fill-blue" : ""} />
                     </div>
@@ -261,7 +262,7 @@ export default function Spotify() {
 
                 <VolumeBar percent={volume} />
 
-                <div className="relative ml-5" onClick={() => toggleLoop()}>
+                <div className="relative ml-5 hover:cursor-pointer active:scale-95" onClick={() => toggleLoop()}>
                     <div className="w-[22px] h-[22px] relative">
                         <MusicLoopIcon className={loop != 'off' ? "fill-blue" : ""} />
                     </div>
@@ -275,7 +276,7 @@ export default function Spotify() {
                     }
                 </div>
 
-                <div className="relative w-7 h-7 ml-5">
+                <div className="relative w-7 h-7 ml-5 hover:cursor-pointer active:scale-95">
                     <Image
                         className=""
                         alt="Queue"
@@ -286,7 +287,7 @@ export default function Spotify() {
                 </div>
             </div>
 
-            <div className="absolute right-5 top-5">
+            <div className="absolute right-5 top-5 hover:cursor-pointer active:scale-95">
                 <div className="relative w-7 h-7">
                     <Image
                         alt="Queue"

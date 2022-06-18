@@ -61,6 +61,68 @@ module.exports = {
                 });
         });
     },
+    pause: function (spotifyClient) {
+        return new Promise(function (resolve, reject) {
+            spotifyClient.pause()
+                .then(function () {
+                    resolve();
+                }, function (err) {
+                    reject(err);
+                });
+        });
+    },
+    play: function (spotifyClient) {
+        return new Promise(function (resolve, reject) {
+            spotifyClient.play()
+                .then(function () {
+                    resolve();
+                }, function (err) {
+                    reject(err);
+                });
+        });
+    },
+    skipToNext: function (spotifyClient) {
+        return new Promise(function (resolve, reject) {
+            spotifyClient.skipToNext()
+                .then(function () {
+                    resolve();
+                }, function (err) {
+                    reject(err);
+                });
+        });
+    },
+    skipToPrevious: function (spotifyClient) {
+        return new Promise(function (resolve, reject) {
+            spotifyClient.skipToPrevious()
+                .then(function () {
+                    resolve();
+                }, function (err) {
+                    reject(err);
+                });
+        });
+    },
+    setShuffle: function (spotifyClient, state) {
+        return new Promise(function (resolve, reject) {
+            spotifyClient.setShuffle(state)
+                .then(function () {
+                    resolve();
+                }, function (err) {
+                    reject(err);
+                });
+        });
+    },
+    setRepeat: function (spotifyClient, type) {
+        if (!(['off', 'track', 'context'].includes(type))) return;
+
+        return new Promise(function (resolve, reject) {
+            spotifyClient.setRepeat(type)
+                .then(function () {
+                    resolve();
+                }, function (err) {
+                    reject(err);
+                });
+        });
+    },
     refreshAccessToken: function (spotifyClient) {
         return new Promise(function (resolve, reject) {
             spotifyClient.refreshAccessToken().then(
@@ -75,5 +137,5 @@ module.exports = {
                 }
             );
         });
-    }
+    },
 }

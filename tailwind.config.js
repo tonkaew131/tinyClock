@@ -27,6 +27,7 @@ module.exports = {
         teal: '#94e2d5',
         green: '#a6e3a1',
         yellow: '#f9e2af',
+        peach: '#fab387',
         maroon: '#eba0ac',
         red: '#f38ba8',
         mauve: '#cba6f7',
