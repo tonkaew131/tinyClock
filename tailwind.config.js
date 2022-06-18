@@ -13,7 +13,7 @@ module.exports = {
         base: '#1e1e2e',
         surface0: '#313244',
         surface1: '#45475a',
-        surfaec2: '#585b70',
+        surface2: '#585b70',
         overlay0: '#6c7086',
         overlay1: '#7f849c',
         overlay2: '#9399b2',

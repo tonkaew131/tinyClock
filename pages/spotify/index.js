@@ -25,6 +25,32 @@ function progressBar(percent) {
     );
 }
 
+function VolumeBar(props) {
+    const percent = props.percent;
+
+    return (
+        <div className="flex">
+            <div className="relative w-6 h-6 ml-5">
+                <Image
+                    alt="Volume"
+                    src="/music_speaker_icon.svg"
+                    layout="fill"
+                    objectFit="cover"
+                />
+            </div>
+            <div className="relative m-auto ml-3 mr-0">
+                <div className="bg-overlay0 h-[6px] w-[148px] rounded-full" />
+                <div
+                    className="bg-blue absolute h-[6px] w-[148px] rounded-full top-1/2 -translate-y-1/2"
+                    style={{
+                        width: `${percent / 100 * 148}px`
+                    }}
+                />
+            </div>
+        </div>
+    );
+}
+
 function zeroPad(num, size) {
     return num.toString().padStart(size, '0');
 }
@@ -37,6 +63,7 @@ function formatMillis(ms) {
 
 export default function Spotify() {
     const [playingState, setPlayingState] = useState(false);
+    const [volume, setVolume] = useState(50);
 
     const [duration, setDuration] = useState(6000000);
     const [progress, setProgress] = useState(0);
@@ -94,7 +121,8 @@ export default function Spotify() {
             setArtist((json.data?.body?.item?.artists || [{ name: 'Artist' }]).map(a => a.name).join(', '));
 
             setAlbumCover(json.data?.body?.item?.album?.images[0]?.url || '/placeholder_record.svg');
-            setPlayingState(json.data.body?.is_playing || false);
+            setPlayingState(json.data?.body?.is_playing || false);
+            setVolume(json.data?.body?.device?.volume_percent || 0);
 
             const _progress = json.data?.body?.progress_ms || 0;
             const _duration = json.data?.body?.item?.duration_ms || 6000000;
@@ -116,7 +144,7 @@ export default function Spotify() {
     }, []);
 
     return (
-        <div className="bg-base w-screen h-screen text-text font-Roboto select-none">
+        <div className=" w-screen h-screen text-text font-Roboto select-none bg-gradient-to-br from-surface0 to-base">
             <div className="flex">
                 <div className="w-[150px] h-[150px] relative pointer-events-none m-auto mt-6 ml-10">
                     <Image
@@ -200,15 +228,7 @@ export default function Spotify() {
                     }
                 </div>
 
-                <div className="relative w-6 h-6 ml-5">
-                    <Image
-                        alt="Volume"
-                        src="/music_speaker_icon.svg"
-                        layout="fill"
-                        objectFit="cover"
-                    />
-                </div>
-                <div className="bg-overlay0 h-[6px] w-[148px] rounded-full m-auto ml-3 mr-0" />
+                <VolumeBar percent={volume} />
 
                 <div className="relative ml-5" onClick={() => toggleLoop()}>
                     <div className="w-[22px] h-[22px] relative">
