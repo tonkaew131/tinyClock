@@ -5,7 +5,9 @@ import styles from './../../styles/spotify.module.css';
 import MusicLoopIcon from '../../components/MusicLoopIcon';
 import MusicShuffleIcon from '../../components/MusicShuffleIcon';
 
-function progressBar(percent) {
+function ProgressBar(props) {
+    const percent = props.percent;
+
     return (
         <div className="relative">
             <div className="w-10/12 bg-overlay0 h-[3px] rounded-full m-auto mt-8" />
@@ -208,7 +210,9 @@ export default function Spotify() {
                     </div>
                 </div>
             </div>
-            {progressBar(progressPercent)}
+
+            <ProgressBar percent={progressPercent} />
+
             {/* <div className="relative">
                 <div className="w-10/12 bg-overlay0 h-[3px] rounded-full m-auto mt-9" />
                 <div className="w-[10px] h-[10px] rounded-full bg-white absolute left-[34px] top-[-4px] transition-all duration-[3000ms]" />
