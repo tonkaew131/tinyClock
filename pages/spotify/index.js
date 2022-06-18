@@ -116,17 +116,46 @@ export default function Spotify() {
     const [albumCover, setAlbumCover] = useState('/placeholder_record.svg');
 
     function togglePlayingState() {
-        setPlayingState(!playingState);
+        const state = playingState ? 'pause' : 'play';
+
+        fetch('/api/spotify/player/update', {
+            body: JSON.stringify({ methods: [{ type: state }] }),
+            method: 'POST',
+        });
+    }
+
+    function skipToNext() {
+        fetch('/api/spotify/player/update', {
+            body: JSON.stringify({ methods: [{ type: 'skip_to_next' }] }),
+            method: 'POST',
+        });
+    }
+
+    function skipToPrevious() {
+        fetch('/api/spotify/player/update', {
+            body: JSON.stringify({ methods: [{ type: 'skip_to_previous' }] }),
+            method: 'POST',
+        });
     }
 
     function toggleLoop() {
-        if (loop == 'off') return setLoop('context');
-        if (loop == 'context') return setLoop('track');
-        return setLoop('off');
+        var state = '';
+
+        if (loop == 'off') state = 'context';
+        else if (loop == 'context') state = 'track';
+        else state = 'off';
+
+        fetch('/api/spotify/player/update', {
+            body: JSON.stringify({ methods: [{ type: 'set_repeat', value: state }] }),
+            method: 'POST',
+        });
     }
 
     function toggleShuffle() {
-        setShuffle(!shuffle);
+        fetch('/api/spotify/player/update', {
+            body: JSON.stringify({ methods: [{ type: 'set_shuffle', value: !shuffle }] }),
+            method: 'POST',
+        });
     }
 
     const intervalId = useRef();
@@ -202,7 +231,7 @@ export default function Spotify() {
                         </div>
 
                         <div className="flex">
-                            <div className="w-[25px] h-[25px] relative m-auto mr-9 transition-all hover:cursor-pointer active:scale-90">
+                            <div onClick={() => skipToPrevious()} className="w-[25px] h-[25px] relative m-auto mr-9 transition-all hover:cursor-pointer active:scale-90">
                                 <Image
                                     className="fill-text"
                                     src="/music_previous_icon.svg"
@@ -233,7 +262,7 @@ export default function Spotify() {
                                     </div>
                                 }
                             </div>
-                            <div className="w-[25px] h-[25px] relative m-auto ml-9 rotate-180 transition-all hover:cursor-pointer active:scale-90">
+                            <div onClick={() => skipToNext()} className="w-[25px] h-[25px] relative m-auto ml-9 rotate-180 transition-all hover:cursor-pointer active:scale-90">
                                 <Image
                                     className="fill-text"
                                     src="/music_previous_icon.svg"

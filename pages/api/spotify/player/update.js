@@ -4,8 +4,28 @@ import Spotify from '../../../../shared/spotify';
 const SpotifyWebApi = require('spotify-web-api-node');
 
 export default async function handler(req, res) {
-    const body = req.body;
-    if (!body || !('methods' in body) || body.methods.length == 0) {
+    var body = req.body;
+    if (!body) {
+        return res.status(400).json({
+            error: {
+                code: 400,
+                message: 'Bad Request'
+            }
+        });
+    }
+
+    try {
+        body = JSON.parse(body);
+    } catch (error) {
+        return res.status(400).json({
+            error: {
+                code: 400,
+                message: 'Bad Request'
+            }
+        });
+    }
+
+    if (!('methods' in body) || body.methods.length == 0) {
         return res.status(400).json({
             error: {
                 code: 400,
