@@ -7,6 +7,8 @@ import MusicShuffleIcon from '../../components/MusicShuffleIcon';
 
 function ProgressBar(props) {
     const percent = props.percent;
+    const progress = props.progress;
+    const duration = props.duration;
 
     return (
         <div className="relative">
@@ -23,6 +25,11 @@ function ProgressBar(props) {
                 }}
                 className="bg-white h-[3px] rounded-full m-auto ml-10 top-0 absolute ease-linear transition-all"
             />
+
+            <div className="flex text-subtext1 text-xs mx-10 mt-1">
+                <p>{formatMillis(progress)}</p>
+                <p className="m-auto mr-0">{formatMillis(duration)}</p>
+            </div>
         </div>
     );
 }
@@ -49,6 +56,21 @@ function VolumeBar(props) {
                     }}
                 />
             </div>
+        </div>
+    );
+}
+
+function AlbumCover(props) {
+    return (
+        <div className="w-[150px] h-[150px] relative pointer-events-none m-auto mt-6 ml-10">
+            <Image
+                className="rounded-md"
+                src={props.src}
+                alt="Album cover Image"
+                layout="fill"
+                objectFit="cover"
+                priority
+            />
         </div>
     );
 }
@@ -148,16 +170,7 @@ export default function Spotify() {
     return (
         <div className=" w-screen h-screen text-text font-Roboto select-none bg-gradient-to-br from-surface0 to-base">
             <div className="flex">
-                <div className="w-[150px] h-[150px] relative pointer-events-none m-auto mt-6 ml-10">
-                    <Image
-                        className="rounded-md"
-                        src={albumCover}
-                        alt="Album cover Image"
-                        layout="fill"
-                        objectFit="cover"
-                        priority
-                    />
-                </div>
+                <AlbumCover src={albumCover} />
 
                 <div className="flex w-3/5">
                     <div className="w-full">
@@ -165,6 +178,7 @@ export default function Spotify() {
                             <p className={`${false ? styles.scroll : ''} text-2xl truncate`}>{songName}</p>
                             <p className={`${false ? styles.scroll : ''} text-overlay0 text-md truncate`}>{artist}</p>
                         </div>
+
                         <div className="flex">
                             <div className="w-[25px] h-[25px] relative m-auto mr-9 transition-all hover:cursor-pointer active:scale-90">
                                 <Image
@@ -211,16 +225,8 @@ export default function Spotify() {
                 </div>
             </div>
 
-            <ProgressBar percent={progressPercent} />
+            <ProgressBar percent={progressPercent} progress={progress} duration={duration} />
 
-            {/* <div className="relative">
-                <div className="w-10/12 bg-overlay0 h-[3px] rounded-full m-auto mt-9" />
-                <div className="w-[10px] h-[10px] rounded-full bg-white absolute left-[34px] top-[-4px] transition-all duration-[3000ms]" />
-            </div> */}
-            <div className="flex text-subtext1 text-xs mx-10 mt-1">
-                <p>{formatMillis(progress)}</p>
-                <p className="m-auto mr-0">{formatMillis(duration)}</p>
-            </div>
             <div className="flex mt-5 ml-[72px]">
                 <div className="relative" onClick={() => toggleShuffle()}>
                     <div className="w-6 h-6 relative">
@@ -268,7 +274,6 @@ export default function Spotify() {
                         objectFit="cover"
                     />
                 </div>
-
             </div>
         </div>
     )
