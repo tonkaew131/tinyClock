@@ -4,6 +4,7 @@ import Head from 'next/head'
 import Clock from './clock'
 import Calendar from './calendar';
 import Spotify from './spotify';
+import Weather from './weather';
 
 export default function Home() {
     // const devMode = process.env.APP_ENV == 'development' ? true : false;
@@ -14,6 +15,7 @@ export default function Home() {
         <Clock key="Clock" />,
         <Calendar key="Calendar" />,
         <Spotify key="Spotify" />,
+        <Weather key="Weather"/>,
     ];
 
     function nextPage() {

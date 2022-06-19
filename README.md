@@ -9,12 +9,12 @@ Stocks price notify # For Wansai
 
 Features
 - Working On:
-    - Spotify
+    - Weather
 - Done:
     - Clock
     - Calendar
+    - Spotify
 - Plan:
-    - Weather
     - Radio
     - PC Performance
     - Notification via Bluetooth
