@@ -37,7 +37,7 @@ module.exports = {
       },
       fontFamily: {
         Kanit: ['Kanit', 'sans-serif'],
-        Oswald: ['Oswald', 'sans-serif'],
+        Oswald: ['Oswald', 'Kanit', 'sans-serif'],
         Roboto: ['Roboto', 'Kanit', 'sans-serif'],
       }
     },

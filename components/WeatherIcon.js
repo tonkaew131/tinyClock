@@ -86,7 +86,7 @@ export default function WeatherIcon(props) {
 
     return (
         weatherType ?
-            <div className="relative w-24 h-24">
+            <div className={`relative ${props.className}`}>
                 <svg viewBox={viewBox} fill="none" xmlns="http://www.w3.org/2000/svg">
                     {group}
 
@@ -242,6 +242,6 @@ export default function WeatherIcon(props) {
                     </defs>
                 </svg>
             </div>
-            : <div className="w-24 h-24 bg-red rounded-full" />
+            : <div className={`${props.className} bg-red rounded-full`} />
     );
 }
