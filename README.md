@@ -7,13 +7,18 @@ https://github.com/catppuccin/catppuccin
 
 Stocks price notify # For Wansai
 
+API:
+    - Calendar: Google Calendar API
+    - Spotify: Spotify Web API
+    - Weather: tmd Weather Forecast API
+
 Features
 - Working On:
-    - Weather
+    - Weather (maybe integrate with external thermal/humid sensor)
 - Done:
-    - Clock
+    - Clock (might add weather later)
     - Calendar
-    - Spotify
+    - Spotify (basic function)
 - Plan:
     - Radio
     - PC Performance
