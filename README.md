@@ -34,5 +34,5 @@ Features
     - Radio
 
     - PC Performance
-    
+
     - Notification via Bluetooth
