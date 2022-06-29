@@ -1,8 +1,16 @@
-async function getLocationKey() {
-
-}
+import locationKeys from '../../../components/LocationKeys.data';
 
 export default async function handler(req, res) {
+    const locationkey = req.param.location_id;
+    if (!(locationkey in Object.keys(locationKeys))) {
+        return res.status(404).json({
+            error: {
+                code: 404,
+                message: 'Not Found'
+            }
+        });
+    }
+
     /*
     Location Keys
      - 2032097: Ban Bang Rak Yai, Nonthaburi
