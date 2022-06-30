@@ -100,7 +100,47 @@ async function getMinuteCast(locationID) {
     const res = await fetch(uri);
     const data = await res.json();
 
-    console.log('Data rewrited!');
+    console.log('Data rewrited!, MinuteCast');
+    weatherData.timestamp = currentMillis;
+    weatherData.data = data;
+
+    try {
+        await writeFile(FILE_PATH, weatherData);
+    } catch (error) {
+        throw error;
+    }
+
+    return weatherData.data;
+}
+
+// Current Condition (every 1 hour)
+async function getCurrentCondition(locationID) {
+    const FILE_PATH = `./db/${locationID}_current_condition.json`;
+    const CACHE_DURATION = 60 * 60 * 1000; // in ms
+
+    try {
+        var weatherData = await readFile(FILE_PATH);
+    } catch (error) {
+        weatherData = {};
+    }
+
+    const timestamp = weatherData.timestamp || 0;
+    const currentMillis = Date.now();
+    if ((currentMillis - timestamp) < CACHE_DURATION) {
+        return weatherData.data;
+    }
+
+    try {
+        var token = await getCoreWeatherToken();
+    } catch (error) {
+        throw error;
+    }
+
+    let uri = `http://dataservice.accuweather.com/currentconditions/v1/${locationID}?apikey=${token}`;
+    const res = await fetch(uri);
+    const data = await res.json();
+
+    console.log('Data rewrited! (Current Condition)');
     weatherData.timestamp = currentMillis;
     weatherData.data = data;
 
@@ -162,9 +202,16 @@ export default async function handler(req, res) {
         return res.status(error.error.code).json(error);
     }
 
+    try {
+        var currentCondition = await getCurrentCondition(locationkey);
+    } catch (error) {
+        return res.status(error.error.code).json(error);
+    }
+
     return res.status(200).json({
         data: {
-            minute_cast: minuteCast
+            minute_cast: minuteCast,
+            current_condition: currentCondition,
         }
     });
 }
