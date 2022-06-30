@@ -1,16 +1,119 @@
 import locationKeys from '../../../components/LocationKeys.data';
+import config from '../../../config';
 
-export default async function handler(req, res) {
-    const locationkey = req.param.location_id;
-    if (!(locationkey in Object.keys(locationKeys))) {
-        return res.status(404).json({
+const fs = require('fs');
+
+const ACCU_WEATHER_TOKEN_PATH = config.accu_weather.token_path;
+var CORE_WEATHER_TOKEN = '';
+var MINUTE_CAST_TOKEN = '';
+
+async function readFile(filePath) {
+    try {
+        var json = await fs.promises.readFile(filePath, 'utf-8');
+        json = JSON.parse(json);
+    } catch (error) {
+        throw {
             error: {
-                code: 404,
-                message: 'Not Found'
+                code: 500, message: `Error reading ${filePath}`
             }
-        });
+        };
     }
 
+    return json;
+};
+
+async function writeFile(filePath, content) {
+    try {
+        await fs.promises.writeFile(filePath, JSON.stringify(content));
+    } catch (error) {
+        throw {
+            error: {
+                code: 500, message: `Error writing ${filePath}`
+            }
+        };
+    }
+}
+
+async function getCoreWeatherToken() {
+    if (CORE_WEATHER_TOKEN != '') return CORE_WEATHER_TOKEN;
+
+    try {
+        var tokenFile = await readFile(ACCU_WEATHER_TOKEN_PATH);
+    } catch (error) {
+        throw {
+            error: {
+                code: 500, message: `Error reading ${ACCU_WEATHER_TOKEN_PATH}`
+            }
+        }
+    }
+
+    CORE_WEATHER_TOKEN = tokenFile.core_weather.access_token;
+    MINUTE_CAST_TOKEN = tokenFile.minute_cast.access_token;
+    return CORE_WEATHER_TOKEN;
+}
+
+async function getMinuteCastToken() {
+    if (MINUTE_CAST_TOKEN != '') return MINUTE_CAST_TOKEN;
+
+    try {
+        var tokenFile = await readFile(ACCU_WEATHER_TOKEN_PATH);
+    } catch (error) {
+        throw {
+            error: {
+                code: 500, message: `Error reading ${ACCU_WEATHER_TOKEN_PATH}`
+            }
+        }
+    }
+
+    CORE_WEATHER_TOKEN = tokenFile.core_weather.access_token;
+    MINUTE_CAST_TOKEN = tokenFile.minute_cast.access_token;
+    return MINUTE_CAST_TOKEN;
+}
+
+// MinuteCast (every 1 hour)
+async function getMinuteCast(locationID) {
+    const FILE_PATH = `./db/${locationID}_minute_cast.json`;
+    const CACHE_DURATION = 60 * 60 * 1000; // in ms
+
+    try {
+        var weatherData = await readFile(FILE_PATH);
+    } catch (error) {
+        weatherData = {};
+    }
+
+    const timestamp = weatherData.timestamp || 0;
+    const currentMillis = Date.now();
+    if ((currentMillis - timestamp) < CACHE_DURATION) {
+        return weatherData.data;
+    }
+
+    const lat = locationKeys[locationID].geo_position.lat;
+    const long = locationKeys[locationID].geo_position.long;
+
+    try {
+        var token = await getMinuteCastToken();
+    } catch (error) {
+        throw error;
+    }
+
+    let uri = `https://dataservice.accuweather.com/forecasts/v1/minute?apikey=${token}&q=${lat},${long}`;
+    const res = await fetch(uri);
+    const data = await res.json();
+
+    console.log('Data rewrited!');
+    weatherData.timestamp = currentMillis;
+    weatherData.data = data;
+
+    try {
+        await writeFile(FILE_PATH, weatherData);
+    } catch (error) {
+        throw error;
+    }
+
+    return weatherData.data;
+}
+
+export default async function handler(req, res) {
     /*
     Location Keys
      - 2032097: Ban Bang Rak Yai, Nonthaburi
@@ -28,13 +131,40 @@ export default async function handler(req, res) {
          - Save for next used
         2. Current Conditions
          - http://dataservice.accuweather.com/currentconditions/v1/{locationKey}
-         - Called every hour (24 calls/day) if only if localation are same.
+         - Called every hour (24 calls/day) if only if location are same.
         3. 5 Days of Daily Forecasts
          - http://dataservice.accuweather.com/forecasts/v1/daily/5day/{locationKey}
-         - Called once a day (1 calls/day) if only if localation are same.
+         - Called once a day (1 calls/day) if only if location are same.
     */
 
+    const locationkey = req.query.location_id;
+    if (!locationkey) {
+        return res.status(400).json({
+            error: {
+                code: 400,
+                message: 'Bad Request'
+            }
+        });
+    }
+
+    if (!(Object.keys(locationKeys).includes(locationkey))) {
+        return res.status(404).json({
+            error: {
+                code: 404,
+                message: 'Not Found'
+            }
+        });
+    }
+
+    try {
+        var minuteCast = await getMinuteCast(locationkey);
+    } catch (error) {
+        return res.status(error.error.code).json(error);
+    }
+
     return res.status(200).json({
-        joe: 'mama'
+        data: {
+            minute_cast: minuteCast
+        }
     });
 }

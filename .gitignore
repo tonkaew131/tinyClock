@@ -34,5 +34,6 @@ yarn-error.log*
 
 /secret
 config.js
+/db
 
 /mics
