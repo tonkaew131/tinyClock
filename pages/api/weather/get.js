@@ -96,9 +96,10 @@ async function getMinuteCast(locationID) {
         throw error;
     }
 
-    let uri = `https://dataservice.accuweather.com/forecasts/v1/minute?apikey=${token}&q=${lat},${long}`;
+    const uri = `https://dataservice.accuweather.com/forecasts/v1/minute?apikey=${token}&q=${lat},${long}`;
     const res = await fetch(uri);
     const data = await res.json();
+    // Assume its just work, forget abt error handler.
 
     console.log('Data rewrited!, MinuteCast');
     weatherData.timestamp = currentMillis;
@@ -136,11 +137,51 @@ async function getCurrentCondition(locationID) {
         throw error;
     }
 
-    let uri = `http://dataservice.accuweather.com/currentconditions/v1/${locationID}?apikey=${token}`;
+    const uri = `http://dataservice.accuweather.com/currentconditions/v1/${locationID}?apikey=${token}`;
     const res = await fetch(uri);
     const data = await res.json();
 
     console.log('Data rewrited! (Current Condition)');
+    weatherData.timestamp = currentMillis;
+    weatherData.data = data;
+
+    try {
+        await writeFile(FILE_PATH, weatherData);
+    } catch (error) {
+        throw error;
+    }
+
+    return weatherData.data;
+}
+
+// 5 Days of Daily Forecasts (every 1 day)
+async function getDailyForecast(locationID) {
+    const FILE_PATH = `./db/${locationID}_daily_forecast.json`;
+    const CACHE_DURATION = 24 * 60 * 60 * 1000; // in ms
+
+    try {
+        var weatherData = await readFile(FILE_PATH);
+    } catch (error) {
+        weatherData = {};
+    }
+
+    const timestamp = weatherData.timestamp || 0;
+    const currentMillis = Date.now();
+    if ((currentMillis - timestamp) < CACHE_DURATION) {
+        return weatherData.data;
+    }
+
+    try {
+        var token = await getCoreWeatherToken();
+    } catch (error) {
+        throw error;
+    }
+
+    const uri = `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationID}?apikey=${token}`;
+    const res = await fetch(uri);
+    const data = await res.json();
+
+    console.log('Data rewrited! (Daily Forecasts)');
     weatherData.timestamp = currentMillis;
     weatherData.data = data;
 
@@ -208,10 +249,17 @@ export default async function handler(req, res) {
         return res.status(error.error.code).json(error);
     }
 
+    try {
+        var dailyForecast = await getDailyForecast(locationkey);
+    } catch (error) {
+        return res.status(error.error.code).json(error);
+    }
+
     return res.status(200).json({
         data: {
             minute_cast: minuteCast,
             current_condition: currentCondition,
+            daily_forecast: dailyForecast,
         }
     });
 }
