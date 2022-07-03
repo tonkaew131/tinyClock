@@ -29,10 +29,10 @@ function dayItems(data) {
     const lastDayDate = firstDay.getDay();
 
     return (
-        <div className="grid grid-cols-7 w-full mt-3 font-Kanit text-center">
+        <div className="grid grid-cols-7 w-full mt-2 font-Kanit text-center">
             {[...Array(daysOffset)].map((e, i) => {
                 return (
-                    <div className="h-[45px] text-[24px] text-surface1" key={i}>
+                    <div className="h-[40px] text-[24px] text-surface1" key={i}>
                         {lastMonthDays + i - daysOffset + 1}
                     </div>
                 )
@@ -53,7 +53,7 @@ function dayItems(data) {
                 }
 
                 return (
-                    <div className={`h-[45px] text-[24px] ${isToday ? 'text-crust' : ''}`} key={i}>
+                    <div className={`h-[40px] text-[24px] ${isToday ? 'text-crust' : ''}`} key={i}>
                         {day}
                         {isToday ? <div className="rounded-lg bg-blue w-4/5 pt-[80%] -mt-[34px] m-auto" /> : undefined}
                         {density ? <div className={`rounded-full ${color} ${isToday ? '-mt-[45px] w-[21%] pt-[21%]' : '-mt-[40px] w-1/5 pt-[20%]'} m-auto`} /> : undefined}
@@ -63,7 +63,7 @@ function dayItems(data) {
 
             {[...Array(7 - lastDayDate - 1)].map((e, i) => {
                 return (
-                    <div className="h-[45px] text-[24px] text-surface1" key={i}>
+                    <div className="h-[40px] text-[24px] text-surface1" key={i}>
                         {i + 1}
                     </div>
                 )
