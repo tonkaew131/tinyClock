@@ -193,6 +193,7 @@ export default function Calendar() {
                 if (data.status != 200) return setError(true);
                 json = await data.json();
 
+                console.log(json.data.url);
                 return setRedirect(json.data.url);
             }
 

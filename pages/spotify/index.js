@@ -177,7 +177,11 @@ export default function Spotify() {
                 return;
             }
 
-            if ('error' in json) return console.error(json.error);
+            if ('error' in json) {
+                // setError(json.error.message);
+                return console.error(json.error);
+            }
+            
             if (data.status == 302) {
                 clearInterval(intervalId.current);
                 setError('Please Setup Token');

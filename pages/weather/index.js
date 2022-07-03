@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import WeatherIcon from '../../components/WeatherIcon';
 
 function DailyCard(props) {
@@ -16,6 +17,25 @@ function DailyCard(props) {
 }
 
 export default function Weather() {
+    useEffect(() => {
+        console.log('register Weather');
+
+        const fetchData = async () => {
+            var data = await fetch('/api/weather/get');
+            var json = await data.json();
+
+            if (data.status == 200) {
+                return setEvents(json.data);
+            }
+
+            console.log(json); // For Error
+            // return setError(true);
+            return;
+        };
+
+        fetchData().catch(error => console.error(error));
+    }, []);
+
     return (
         <div className="h-screen w-screen bg-base text-text font-Oswald select-none">
             <div className="flex ml-4 pt-4 items-center">
@@ -25,8 +45,8 @@ export default function Weather() {
             </div>
 
             <div className="flex w-full h-[75px] items-center">
-                <WeatherIcon className="w-8 h-8 mr-2 ml-8" type="humid"/>
-                <div className="bg-blue w-[4px] h-[50%] rounded-full"/>
+                <WeatherIcon className="w-8 h-8 mr-2 ml-8" type="humid" />
+                <div className="bg-blue w-[4px] h-[50%] rounded-full" />
                 <p className="text-3xl ml-2 leading-none text-overlay2">00</p>
                 <p className="text-overlay2 ml-1 mt-2">mm</p>
                 {/* <p className="text-3xl text-right mr-5 w-full">ฝนตกหนัก</p> */}
@@ -37,7 +57,7 @@ export default function Weather() {
                     let today = new Date().getDay();
 
                     return (
-                        <DailyCard key={i} offset={i} today={today}/>
+                        <DailyCard key={i} offset={i} today={today} />
                     )
                 })}
             </div>

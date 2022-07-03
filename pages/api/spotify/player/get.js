@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     try {
         var credential = await Spotify.readCredential();
     } catch (error) {
-        return res.status(error.code).json(error);
+        return res.status(error.error.code).json(error);
     }
 
     var spotifyApi = new SpotifyWebApi({
@@ -17,6 +17,15 @@ export default async function handler(req, res) {
     });
 
     var token = await Spotify.readToken();
+    if(!Object.keys(token).length) {
+        return res.status(404).json({
+            error: {
+                code: 404,
+                message: 'Not Found!'
+            }
+        })
+    }
+
     spotifyApi.setAccessToken(token.access_token);
 
     try {
