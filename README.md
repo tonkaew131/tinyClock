@@ -9,11 +9,11 @@ Stocks price notify # For Wansai
 
 API:
 
-    - Calendar: Google Calendar API
+    - Calendar: [Google Calendar API](https://console.cloud.google.com/apis/credentials)
 
-    - Spotify: Spotify Web API
+    - Spotify: [Spotify Web API](https://developer.spotify.com/dashboard/applications)
 
-    - Weather: [tmd Weather Forecast API](https://data.tmd.go.th/nwpapi/doc/main/getting_start.html)
+    - Weather: [AccuWeather API](https://developer.accuweather.com/apis)
 
 Features
 
@@ -30,6 +30,7 @@ Features
     - Spotify (basic function)
 
 - Plan:
+    - Stop Watch / Timer
 
     - Radio
 
