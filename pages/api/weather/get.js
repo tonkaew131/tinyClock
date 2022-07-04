@@ -12,9 +12,16 @@ async function readFile(filePath) {
         var json = await fs.promises.readFile(filePath, 'utf-8');
         json = JSON.parse(json);
     } catch (error) {
+        errorMessage = `Error reading ${filePath}`;
+        errorCode = 500;
+        if (error.includes('Error: ENOENT: no such file or directory')) {
+            errorMessage = `No such file or directory, ${filePath}`;
+            errorCode = 404;
+        }
+
         throw {
             error: {
-                code: 500, message: `Error reading ${filePath}`
+                code: errorCode, message: errorMessage
             }
         };
     }
@@ -40,11 +47,7 @@ async function getCoreWeatherToken() {
     try {
         var tokenFile = await readFile(ACCU_WEATHER_TOKEN_PATH);
     } catch (error) {
-        throw {
-            error: {
-                code: 500, message: `Error reading ${ACCU_WEATHER_TOKEN_PATH}`
-            }
-        }
+        throw error;
     }
 
     CORE_WEATHER_TOKEN = tokenFile.core_weather.access_token;
@@ -58,11 +61,7 @@ async function getMinuteCastToken() {
     try {
         var tokenFile = await readFile(ACCU_WEATHER_TOKEN_PATH);
     } catch (error) {
-        throw {
-            error: {
-                code: 500, message: `Error reading ${ACCU_WEATHER_TOKEN_PATH}`
-            }
-        }
+        throw error;
     }
 
     CORE_WEATHER_TOKEN = tokenFile.core_weather.access_token;

@@ -17,15 +17,6 @@ export default async function handler(req, res) {
     });
 
     var token = await Spotify.readToken();
-    if(!Object.keys(token).length) {
-        return res.status(404).json({
-            error: {
-                code: 404,
-                message: 'Not Found!'
-            }
-        })
-    }
-
     spotifyApi.setAccessToken(token.access_token);
 
     try {
