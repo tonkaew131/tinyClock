@@ -70,6 +70,10 @@ Features
 
 - Working On:
 
+    - Stop Watch / Timer
+
+- On Hold!:
+
     - Weather (maybe integrate with external thermal/humid sensor)
 
 - Done:
@@ -81,8 +85,6 @@ Features
     - Spotify (basic function)
 
 - Plan:
-
-    - Stop Watch / Timer
 
     - Radio
 
