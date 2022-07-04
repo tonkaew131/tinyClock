@@ -221,7 +221,7 @@ export default function Spotify() {
     }, []);
 
     return (
-        <div className=" w-screen h-screen text-text font-Roboto select-none bg-gradient-to-br from-surface0 to-base">
+        <div className="w-screen h-screen text-text font-Roboto select-none bg-gradient-to-br from-surface0 to-base">
             {error ? <ErrorHandler error={error} /> : undefined}
 
             <div className="flex">
