@@ -99,6 +99,7 @@ export default function Timer() {
         // From pause to continue
         if (!stopwatchStatus) {
             setStopwatchStart(Date.now() / 1000);
+            setStopwatchSecond(0);
         }
 
         return setStopwatchStatus(!stopwatchStatus);
@@ -111,6 +112,8 @@ export default function Timer() {
 
             setTimerSecond(goalSecond - 1); // bacause its alraedy started!
             setTimerStart(Date.now() / 1000);
+            setTimerEnding(false);
+        } else {
             setTimerEnding(false);
         }
 
@@ -147,17 +150,17 @@ export default function Timer() {
     return (
         <div className={`w-screen h-screen text-white select-none ${timerEnding ? 'bg-gradient-to-b from-red to-pink' : 'bg-base'}`}>
             <div className="w-full flex items-center pt-5">
-                <div className="m-auto mr-9 hover:cursor-pointer" onClick={() => switchToTimer()} >
-                    <TimerIcon select={mode == 'timer' ? true : false} />
+                <div className="m-auto mr-9 hover:cursor-pointer" onClick={() => switchtoStopWatch()} >
+                    <StopWatchIcon select={mode == 'stopwatch' ? true : false} />
                 </div>
 
-                <div className="m-auto ml-0 hover:cursor-pointer" onClick={() => switchtoStopWatch()} >
-                    <StopWatchIcon select={mode == 'stopwatch' ? true : false} />
+                <div className="m-auto ml-0 hover:cursor-pointer" onClick={() => switchToTimer()} >
+                    <TimerIcon select={mode == 'timer' ? true : false} />
                 </div>
             </div>
 
             {
-                mode == 'stopwatch' ?
+                mode == 'timer' ?
                     <TimerMode
                         goalHour={timerGoalHour}
                         goalMinute={timerGoalMinute}
