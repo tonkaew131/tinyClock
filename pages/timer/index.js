@@ -19,7 +19,7 @@ function formattedTime(sec) {
 }
 
 // Component, This is actually Stop Watch ahahaha
-function TimerMode(props) {
+function StopwatchMode(props) {
     const timerSec = props.second;
     const timerStatus = props.status ? true : false;
 
@@ -34,7 +34,7 @@ function TimerMode(props) {
 }
 
 // Component, Now this is timer
-function StopWatchMode(props) {
+function TimerMode(props) {
     const status = props.status ? true : false;
 
     const sec = props.second;
@@ -65,56 +65,56 @@ function StopWatchMode(props) {
 export default function Timer() {
     const [mode, setMode] = useState('stopwatch'); // timer, stopwatch
 
+    const [stopwatchStart, setStopwatchStart] = useState(Date.now() / 1000);
+    const [stopwatchSecond, setStopwatchSecond] = useState(0);
+    const [stopwatchStatus, setStopwatchStatus] = useState(false);
+
     const [timerStart, setTimerStart] = useState(Date.now() / 1000);
     const [timerSecond, setTimerSecond] = useState(0);
     const [timerStatus, setTimerStatus] = useState(false);
+    const [timerEnding, setTimerEnding] = useState(false);
 
-    const [stopwatchStart, setStopwatchStart] = useState(Date.now() / 1000);
-    const [stopwatchSecond, setStopwatchSecond] = useState(0);
-    const [stopwatchStatus, setstopwatchStatus] = useState(false);
-    const [stopwatchEnding, setStopwatchEnding] = useState(false);
-
-    const [stopWatchGoalHour, setStopWatchGoalHour] = useState(0);
-    const [stopWatchGoalMinute, setStopWatchGoalMinute] = useState(0);
-    const [stopWatchGoalSecond, setStopWatchGoalSecond] = useState(10);
+    const [timerGoalHour, setTimerGoalHour] = useState(0);
+    const [timerGoalMinute, setTimerGoalMinute] = useState(0);
+    const [timerGoalSecond, setTimerGoalSecond] = useState(10);
 
     function switchToTimer() {
-        setStopwatchEnding(false);
-        setstopwatchStatus(false);
+        setTimerEnding(false);
+        setTimerStatus(false);
 
-        const goalSecond = (stopWatchGoalHour * 60 * 60) + (stopWatchGoalMinute * 60) + stopWatchGoalSecond;
-        setStopwatchSecond(goalSecond);
+        const goalSecond = (timerGoalHour * 60 * 60) + (timerGoalMinute * 60) + timerGoalSecond;
+        setTimerSecond(goalSecond);
 
         return setMode('timer');
     }
 
     function switchtoStopWatch() {
-        setStopwatchEnding(false);
-        setTimerStatus(false);
+        setTimerEnding(false);
+        setStopwatchStatus(false);
 
         return setMode('stopwatch');
+    }
+
+    function toggleStopwatch() {
+        // From pause to continue
+        if (!stopwatchStatus) {
+            setStopwatchStart(Date.now() / 1000);
+        }
+
+        return setStopwatchStatus(!stopwatchStatus);
     }
 
     function toggleTimer() {
         // From pause to continue
         if (!timerStatus) {
+            const goalSecond = (timerGoalHour * 60 * 60) + (timerGoalMinute * 60) + timerGoalSecond;
+
+            setTimerSecond(goalSecond - 1); // bacause its alraedy started!
             setTimerStart(Date.now() / 1000);
+            setTimerEnding(false);
         }
 
         return setTimerStatus(!timerStatus);
-    }
-
-    function toggleStopwatch() {
-        // From pause to continue
-        if (!timerStatus) {
-            const goalSecond = (stopWatchGoalHour * 60 * 60) + (stopWatchGoalMinute * 60) + stopWatchGoalSecond;
-
-            setStopwatchSecond(goalSecond - 1); // bacause its alraedy started!
-            setStopwatchStart(Date.now() / 1000);
-            setStopwatchEnding(false);
-        }
-
-        return setstopwatchStatus(!stopwatchStatus);
     }
 
     const intervalId = useRef();
@@ -122,18 +122,18 @@ export default function Timer() {
         console.log('Register Timer!');
 
         intervalId.current = setInterval(() => {
-            if (timerStatus) {
-                setTimerSecond((Date.now() / 1000) - timerStart);
+            if (stopwatchStatus) {
+                setStopwatchSecond((Date.now() / 1000) - stopwatchStart);
             }
 
-            if (stopwatchStatus) {
-                const goalSecond = (stopWatchGoalHour * 60 * 60) + (stopWatchGoalMinute * 60) + stopWatchGoalSecond;
-                const timeLeft = goalSecond + stopwatchStart - (Date.now() / 1000);
+            if (timerStatus) {
+                const goalSecond = (timerGoalHour * 60 * 60) + (timerGoalMinute * 60) + timerGoalSecond;
+                const timeLeft = goalSecond + timerStart - (Date.now() / 1000);
 
                 if (timeLeft > 0) {
-                    setStopwatchSecond(timeLeft);
+                    setTimerSecond(timeLeft);
                 } else {
-                    setStopwatchEnding(true);
+                    setTimerEnding(true);
                 }
             }
         }, 1000);
@@ -142,10 +142,10 @@ export default function Timer() {
             console.log('Unregister Timer!');
             clearInterval(intervalId.current);
         };
-    }, [timerStatus, stopwatchStatus]);
+    }, [stopwatchStatus, timerStatus]);
 
     return (
-        <div className={`w-screen h-screen text-white select-none ${stopwatchEnding ? 'bg-gradient-to-b from-red to-pink' : 'bg-base'}`}>
+        <div className={`w-screen h-screen text-white select-none ${timerEnding ? 'bg-gradient-to-b from-red to-pink' : 'bg-base'}`}>
             <div className="w-full flex items-center pt-5">
                 <div className="m-auto mr-9 hover:cursor-pointer" onClick={() => switchToTimer()} >
                     <TimerIcon select={mode == 'timer' ? true : false} />
@@ -157,17 +157,17 @@ export default function Timer() {
             </div>
 
             {
-                mode == 'timer' ?
-                    <TimerMode second={timerSecond} status={timerStatus} toggleTimer={() => toggleTimer()} /> :
-                    <StopWatchMode
-                        goalHour={stopWatchGoalHour}
-                        goalMinute={stopWatchGoalMinute}
-                        goalSecond={stopWatchGoalSecond}
-                        second={stopwatchSecond}
-                        status={stopwatchStatus}
-                        toggleStopwatch={() => toggleStopwatch()}
-                        ending={stopwatchEnding}
-                    />
+                mode == 'stopwatch' ?
+                    <TimerMode
+                        goalHour={timerGoalHour}
+                        goalMinute={timerGoalMinute}
+                        goalSecond={timerGoalSecond}
+                        second={timerSecond}
+                        status={timerStatus}
+                        toggleStopwatch={() => toggleTimer()}
+                        ending={timerEnding}
+                    /> :
+                    <StopwatchMode second={stopwatchSecond} status={stopwatchStatus} toggleTimer={() => toggleStopwatch()} />
             }
         </div >
     );
