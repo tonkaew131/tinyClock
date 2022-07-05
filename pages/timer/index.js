@@ -18,7 +18,7 @@ function formattedTime(sec) {
     return `${zeroPad(hour, 2)}:${zeroPad(minute, 2)}:${zeroPad(second, 2)}`;
 }
 
-// Component, This is actually Stop Watch ahahaha
+// Component
 function StopwatchMode(props) {
     const timerSec = props.second;
     const timerStatus = props.status ? true : false;
@@ -33,7 +33,7 @@ function StopwatchMode(props) {
     );
 }
 
-// Component, Now this is timer
+// Component
 function TimerMode(props) {
     const status = props.status ? true : false;
 
@@ -45,18 +45,18 @@ function TimerMode(props) {
     return (
         <div className="mt-9 font-Roboto">
             <div className="flex text-5xl text-overlay1 justify-center" style={{ opacity: status ? 0 : 1 }}>
-                <p className="">{zeroPad(props.goalHour == 0 ? 23 : props.goalHour - 1, 2)}</p>
-                <p className="ml-[45px]">{zeroPad(props.goalMinute == 0 ? 59 : props.goalMinute - 1, 2)}</p>
-                <p className="ml-[45px]">{zeroPad(props.goalSecond == 0 ? 59 : props.goalSecond - 1, 2)}</p>
+                <p className="" onClick={() => props.previousGoalHour()}>{zeroPad(props.goalHour == 0 ? 23 : props.goalHour - 1, 2)}</p>
+                <p className="ml-[45px]" onClick={() => props.previousGoalMinute()}>{zeroPad(props.goalMinute == 0 ? 59 : props.goalMinute - 1, 2)}</p>
+                <p className="ml-[45px]" onClick={() => props.previousGoalSecond()}>{zeroPad(props.goalSecond == 0 ? 59 : props.goalSecond - 1, 2)}</p>
             </div>
             <p className={`w-full text-center text-7xl ${props.ending ? 'text-surface0' : 'text-text'}`} onClick={() => props.toggleStopwatch()}>{
                 status ? `${zeroPad(hour, 2)}:${zeroPad(minute, 2)}:${zeroPad(second, 2)}`
                     : `${zeroPad(props.goalHour, 2)}:${zeroPad(props.goalMinute, 2)}:${zeroPad(props.goalSecond, 2)}`
             }</p>
             <div className="flex text-5xl text-overlay1 justify-center" style={{ opacity: status ? 0 : 1 }}>
-                <p className="">{zeroPad(props.goalHour + 1, 2)}</p>
-                <p className="ml-[45px]">{zeroPad(props.goalMinute == 59 ? 0 : props.goalMinute + 1, 2)}</p>
-                <p className="ml-[45px]">{zeroPad(props.goalSecond == 59 ? 0 : props.goalSecond + 1, 2)}</p>
+                <p className="" onClick={() => props.nextGoalHour()}>{zeroPad(props.goalHour + 1, 2)}</p>
+                <p className="ml-[45px]" onClick={() => props.nextGoalMinute()}>{zeroPad(props.goalMinute == 59 ? 0 : props.goalMinute + 1, 2)}</p>
+                <p className="ml-[45px]" onClick={() => props.nextGoalSecond()}>{zeroPad(props.goalSecond == 59 ? 0 : props.goalSecond + 1, 2)}</p>
             </div>
         </div>
     );
@@ -120,6 +120,30 @@ export default function Timer() {
         return setTimerStatus(!timerStatus);
     }
 
+    function setPreviousTimerGoal_HH() {
+        return setTimerGoalHour(timerGoalHour == 0 ? 23 : timerGoalHour - 1);
+    }
+
+    function setPreviousTimerGoal_MM() {
+        return setTimerGoalMinute(timerGoalMinute == 0 ? 59 : timerGoalMinute - 1);
+    }
+
+    function setPreviousTimerGoal_SS() {
+        return setTimerGoalSecond(timerGoalSecond == 0 ? 59 : timerGoalSecond - 1);
+    }
+
+    function setNextTimerGoal_HH() {
+        return setTimerGoalHour(timerGoalHour + 1);
+    }
+
+    function setNextTimerGoal_MM() {
+        return setTimerGoalMinute(timerGoalMinute == 59 ? 0 : timerGoalMinute + 1);
+    }
+
+    function setNextTimerGoal_SS() {
+        return setTimerGoalSecond(timerGoalSecond == 59 ? 0 : timerGoalSecond + 1);
+    }
+
     const intervalId = useRef();
     useEffect(() => {
         console.log('Register Timer!');
@@ -169,6 +193,12 @@ export default function Timer() {
                         status={timerStatus}
                         toggleStopwatch={() => toggleTimer()}
                         ending={timerEnding}
+                        previousGoalHour={() => setPreviousTimerGoal_HH()}
+                        previousGoalMinute={() => setPreviousTimerGoal_MM()}
+                        previousGoalSecond={() => setPreviousTimerGoal_SS()}
+                        nextGoalHour={() => setNextTimerGoal_HH()}
+                        nextGoalMinute={() => setNextTimerGoal_MM()}
+                        nextGoalSecond={() => setNextTimerGoal_SS()}
                     /> :
                     <StopwatchMode second={stopwatchSecond} status={stopwatchStatus} toggleTimer={() => toggleStopwatch()} />
             }
