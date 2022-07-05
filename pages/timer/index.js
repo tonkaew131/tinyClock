@@ -109,7 +109,7 @@ export default function Timer() {
         if (!timerStatus) {
             const goalSecond = (stopWatchGoalHour * 60 * 60) + (stopWatchGoalMinute * 60) + stopWatchGoalSecond;
 
-            setStopwatchSecond(goalSecond);
+            setStopwatchSecond(goalSecond - 1); // bacause its alraedy started!
             setStopwatchStart(Date.now() / 1000);
             setStopwatchEnding(false);
         }
