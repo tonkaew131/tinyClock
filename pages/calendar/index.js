@@ -56,7 +56,7 @@ function dayItems(data) {
                     <div className={`h-[40px] text-[24px] ${isToday ? 'text-crust' : ''}`} key={i}>
                         {day}
                         {isToday ? <div className="rounded-lg bg-blue w-4/5 pt-[80%] -mt-[34px] m-auto" /> : undefined}
-                        {density ? <div className={`rounded-full ${color} ${isToday ? '-mt-[45px] w-[21%] pt-[21%]' : '-mt-[40px] w-1/5 pt-[20%]'} m-auto`} /> : undefined}
+                        {density ? <div className={`rounded-full ${color} ${isToday ? '-mt-[42px] w-[21%] pt-[21%]' : '-mt-[38px] w-1/5 pt-[20%]'} m-auto`} /> : undefined}
                     </div>
                 );
             })}
