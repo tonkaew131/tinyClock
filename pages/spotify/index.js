@@ -52,7 +52,7 @@ function VolumeBar(props) {
                 />
             </div>
 
-            {isMute ? <div className="relative">
+            {isMute ? <div className="relative hover:cursor-pointer" onClick={() => props.toggleMute()}>
                 <div className="w-7 h-[2px] bg-red rounded-full absolute rotate-45 -translate-x-full top-3" />
                 <div className="w-7 h-[2px] bg-red rounded-full absolute -rotate-45 -translate-x-full top-3" />
             </div> : undefined}
