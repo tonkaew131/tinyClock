@@ -110,6 +110,7 @@ export default function Timer() {
         if (!timerStatus) {
             const goalSecond = (timerGoalHour * 60 * 60) + (timerGoalMinute * 60) + timerGoalSecond;
 
+            if(goalSecond == 0) return;
             setTimerSecond(goalSecond - 1); // bacause its alraedy started!
             setTimerStart(Date.now() / 1000);
             setTimerEnding(false);
