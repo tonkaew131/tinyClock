@@ -137,6 +137,17 @@ module.exports = {
                 });
         });
     },
+    seekPosition: function (spotifyClient, progressMs) {
+        progressMs = Math.round(progressMs);
+        return new Promise(function (resolve, reject) {
+            spotifyClient.seek(progressMs)
+                .then(function () {
+                    resolve();
+                }, function (err) {
+                    reject(err);
+                });
+        });
+    },
     refreshAccessToken: function (spotifyClient) {
         return new Promise(function (resolve, reject) {
             spotifyClient.refreshAccessToken().then(

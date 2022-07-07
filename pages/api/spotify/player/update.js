@@ -68,6 +68,8 @@ export default async function handler(req, res) {
                 await Spotify.setRepeat(spotifyApi, methods[i].value);
             } else if (methodType == 'set_volume') {
                 await Spotify.setVolume(spotifyApi, methods[i].value);
+            } else if (methodType == 'seek_position') {
+                await Spotify.seekPosition(spotifyApi, methods[i].value);
             }
         } catch (error) {
             // Fix later

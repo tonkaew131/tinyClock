@@ -14,6 +14,7 @@ function ProgressBar(props) {
     return (
         <div className="relative">
             <div className="w-10/12 bg-overlay0 h-[3px] rounded-full m-auto mt-8" />
+            <div className="w-10/12 z-10 h-8 rounded-full absolute m-auto ml-10 -top-4 " onClick={(e) => props.handleProgessBar(e)} />
             <div
                 style={{
                     marginLeft: `${(10 / 12) * percent}%`,
@@ -181,7 +182,7 @@ export default function Spotify() {
         if (_volume == 0) {
             // unmute
             setVolume(muteVolume);
-            
+
             fetch('/api/spotify/player/update', {
                 body: JSON.stringify({ methods: [{ type: 'set_volume', value: muteVolume }] }),
                 method: 'POST',
@@ -196,6 +197,15 @@ export default function Spotify() {
                 method: 'POST',
             });
         }
+    }
+
+    function handleProgessBar(e) {
+        const ms = (e.clientX - e.currentTarget.offsetLeft) / e.currentTarget.offsetWidth * duration;
+
+        fetch('/api/spotify/player/update', {
+            body: JSON.stringify({ methods: [{ type: 'seek_position', value: ms }] }),
+            method: 'POST',
+        });
     }
 
     const intervalId = useRef();
@@ -320,7 +330,12 @@ export default function Spotify() {
                 </div>
             </div>
 
-            <ProgressBar percent={progressPercent} progress={progress} duration={duration} />
+            <ProgressBar
+                percent={progressPercent}
+                progress={progress}
+                duration={duration}
+                handleProgessBar={(e) => handleProgessBar(e)}
+            />
 
             <div className="flex mt-5 ml-[72px]">
                 <div className="relative hover:cursor-pointer active:scale-95" onClick={() => toggleShuffle()}>
