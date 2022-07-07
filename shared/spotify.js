@@ -123,6 +123,20 @@ module.exports = {
                 });
         });
     },
+    setVolume: function (spotifyClient, volume) {
+        volume = Math.round(volume);
+        volume = volume > 100 ? 100 : volume;
+        volume = volume < 0 ? 0 : volume;
+
+        return new Promise(function (resolve, reject) {
+            spotifyClient.setVolume(volume)
+                .then(function () {
+                    resolve();
+                }, function (err) {
+                    reject(err);
+                });
+        });
+    },
     refreshAccessToken: function (spotifyClient) {
         return new Promise(function (resolve, reject) {
             spotifyClient.refreshAccessToken().then(

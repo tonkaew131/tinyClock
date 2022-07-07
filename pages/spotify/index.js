@@ -38,10 +38,11 @@ function ProgressBar(props) {
 // Component
 function VolumeBar(props) {
     const percent = props.percent;
+    const isMute = Math.round(percent) == 0;
 
     return (
         <div className="flex">
-            <div className="relative w-6 h-6 ml-5 hover:cursor-pointer active:scale-95">
+            <div className="relative w-6 h-6 ml-5 hover:cursor-pointer active:scale-95" onClick={() => props.toggleMute()}>
                 <Image
                     alt="Volume"
                     src="/music_speaker_icon.svg"
@@ -49,7 +50,13 @@ function VolumeBar(props) {
                     objectFit="cover"
                 />
             </div>
-            <div className="relative m-auto ml-3 mr-0">
+
+            {isMute ? <div className="relative">
+                <div className="w-7 h-[2px] bg-red rounded-full absolute rotate-45 -translate-x-full top-3" />
+                <div className="w-7 h-[2px] bg-red rounded-full absolute -rotate-45 -translate-x-full top-3" />
+            </div> : undefined}
+
+            <div className="relative m-auto ml-3 mr-0" onClick={(e) => props.changeVolume(e)}>
                 <div className="bg-overlay0 h-[6px] w-[148px] rounded-full" />
                 <div
                     className="bg-blue absolute h-[6px] w-[148px] rounded-full top-1/2 -translate-y-1/2"
@@ -102,6 +109,7 @@ export default function Spotify() {
 
     const [playingState, setPlayingState] = useState(false);
     const [volume, setVolume] = useState(50);
+    const [muteVolume, setMuteVolume] = useState(50);
 
     const [duration, setDuration] = useState(6000000);
     const [progress, setProgress] = useState(0);
@@ -158,6 +166,38 @@ export default function Spotify() {
         });
     }
 
+    function handleVolumeBar(e) {
+        const percent = (e.clientX - e.currentTarget.offsetLeft) / e.currentTarget.offsetWidth * 100;
+        setVolume(percent);
+
+        fetch('/api/spotify/player/update', {
+            body: JSON.stringify({ methods: [{ type: 'set_volume', value: percent }] }),
+            method: 'POST',
+        });
+    }
+
+    function toggleMute() {
+        const _volume = Math.round(volume);
+        if (_volume == 0) {
+            // unmute
+            setVolume(muteVolume);
+            
+            fetch('/api/spotify/player/update', {
+                body: JSON.stringify({ methods: [{ type: 'set_volume', value: muteVolume }] }),
+                method: 'POST',
+            });
+        } else {
+            // mute
+            setMuteVolume(volume);
+            setVolume(0);
+
+            fetch('/api/spotify/player/update', {
+                body: JSON.stringify({ methods: [{ type: 'set_volume', value: 0 }] }),
+                method: 'POST',
+            });
+        }
+    }
+
     const intervalId = useRef();
     useEffect(() => {
         console.log('register Spotify');
@@ -181,7 +221,7 @@ export default function Spotify() {
                 // setError(json.error.message);
                 return console.error(json.error);
             }
-            
+
             if (data.status == 302) {
                 clearInterval(intervalId.current);
                 setError('Please Setup Token');
@@ -293,7 +333,11 @@ export default function Spotify() {
                     }
                 </div>
 
-                <VolumeBar percent={volume} />
+                <VolumeBar
+                    percent={volume}
+                    changeVolume={(e) => handleVolumeBar(e)}
+                    toggleMute={() => toggleMute()}
+                />
 
                 <div className="relative ml-5 hover:cursor-pointer active:scale-95" onClick={() => toggleLoop()}>
                     <div className="w-[22px] h-[22px] relative">

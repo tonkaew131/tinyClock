@@ -66,6 +66,8 @@ export default async function handler(req, res) {
                 await Spotify.setShuffle(spotifyApi, methods[i].value);
             } else if (methodType == 'set_repeat') {
                 await Spotify.setRepeat(spotifyApi, methods[i].value);
+            } else if (methodType == 'set_volume') {
+                await Spotify.setVolume(spotifyApi, methods[i].value);
             }
         } catch (error) {
             // Fix later
