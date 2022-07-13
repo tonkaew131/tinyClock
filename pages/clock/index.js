@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 function zeroPad(num, size) {
     return num.toString().padStart(size, '0');
@@ -22,19 +22,38 @@ function formattedDate() {
     return str;
 }
 
+function getCurrentSecond() {
+    const date = new Date();
+    return zeroPad(date.getSeconds(), 2);
+}
+
 export default function Clock() {
     const [time, setTime] = useState(formattedTime());
     const [date, setDate] = useState(formattedDate());
+    const [second, setSecond] = useState(getCurrentSecond());
 
-    setInterval(() => {
-        setTime(formattedTime()); // Update Time
-        setDate(formattedDate()); // Update Date
-    }, 1000);
+    const intervalId = useRef();
+    useEffect(() => {
+        console.log('register Clock');
+
+        intervalId.current = setInterval(() => {
+            setTime(formattedTime()); // Update Time
+            setDate(formattedDate()); // Update Date
+            setSecond(getCurrentSecond()); // Update Second
+        }, 1000);
+
+        return () => {
+            clearInterval(intervalId.current);
+            console.log('unregister Clock');
+        };
+    }, []);
 
     return (
         <div className="bg-base text-text w-screen h-screen flex justify-center items-center select-none pointer-events-none">
             <div className="text-center leading-none mb-4">
-                <p className="text-[175px] font-Oswald">{time}</p>
+                <p className="text-[170px] font-Oswald">{time}</p>
+                <p className="font-Oswald text-3xl absolute right-7 top-[55%]">{second}</p>
+                {/* <p className="text-[175px] font-Oswald">{time}</p> */}
                 <div className="h-[3px] w-[70vw] bg-sapphire rounded-full mx-auto my-3" />
                 <p className="text-[30px] font-Kanit">{date}</p>
             </div>
