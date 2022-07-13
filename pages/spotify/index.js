@@ -4,6 +4,7 @@ import Image from 'next/image'
 import styles from './../../styles/spotify.module.css';
 import MusicLoopIcon from '../../components/MusicLoopIcon';
 import MusicShuffleIcon from '../../components/MusicShuffleIcon';
+import DeviceIcon from '../../components/DeviceIcon';
 
 // Component
 function ProgressBar(props) {
@@ -95,6 +96,38 @@ function ErrorHandler(props) {
     );
 }
 
+// Component
+function DevicesMenu(props) {
+    const devices = props.devices;
+
+    return (
+        <div className="absolute bg-mantle w-4/5 h-48 rounded-md z-10 left-[50%] -translate-x-1/2 top-8 font-Roboto border-blue border-2">
+            <div className="absolute -bottom-3 right-[48px]">
+                <div className="relative w-3 h-3 rotate-180">
+                    <Image
+                        alt="Up Arrow"
+                        src="/triangle_arrow_up.svg"
+                        layout="fill"
+                        objectFit="cover"
+                        className=""
+                    />
+                </div>
+            </div>
+            <p className="text-2xl text-center mt-3">Devices</p>
+            <div className="bg-blue h-[2px] w-20 rounded-full m-auto mb-1" />
+
+            {devices.map(d => {
+                return (
+                    <div className={`ml-5 flex ${d.is_active ? 'text-blue' : ''} active:scale-[99%]`} key={d.id} onClick={() => props.changeDevice(d.id)}>
+                        <DeviceIcon type={d.type} isActive={d.is_active}/>
+                        <p className={`ml-3 my-auto ${d.is_active ? 'font-extrabold' : ''} hover:cursor-pointer`}>{d.name}</p>
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
 function zeroPad(num, size) {
     return num.toString().padStart(size, '0');
 }
@@ -107,6 +140,9 @@ function formatMillis(ms) {
 
 export default function Spotify() {
     const [error, setError] = useState();
+
+    const [deviceMenu, setDeviceMenu] = useState(false);
+    const [devicesList, setDevicesList] = useState([]);
 
     const [playingState, setPlayingState] = useState(false);
     const [volume, setVolume] = useState(50);
@@ -208,6 +244,29 @@ export default function Spotify() {
         });
     }
 
+    function toggleDeviceMenu() {
+        if (!deviceMenu) {
+            fetch('/api/spotify/player/getdevices')
+                .then((res) => res.json())
+                .then((data) => {
+                    setDeviceMenu(!deviceMenu);
+                    setDevicesList(data.data);
+                });
+            return;
+        }
+
+        setDeviceMenu(!deviceMenu);
+    }
+
+    function changeDevice(id) {
+        fetch('/api/spotify/player/update', {
+            body: JSON.stringify({ methods: [{ type: 'change_device', value: id }] }),
+            method: 'POST',
+        });
+
+        setDeviceMenu(false);
+    }
+
     const intervalId = useRef();
     useEffect(() => {
         console.log('register Spotify');
@@ -273,6 +332,7 @@ export default function Spotify() {
     return (
         <div className="w-screen h-screen text-text font-Roboto select-none bg-gradient-to-br from-surface0 to-base">
             {error ? <ErrorHandler error={error} /> : undefined}
+            {deviceMenu ? <DevicesMenu devices={devicesList} changeDevice={(id) => changeDevice(id)}/> : undefined}
 
             <div className="flex">
                 <AlbumCover src={albumCover} />
@@ -368,7 +428,7 @@ export default function Spotify() {
                     }
                 </div>
 
-                <div className="relative w-7 h-7 ml-5 hover:cursor-pointer active:scale-95">
+                <div className="relative w-7 h-7 ml-5 hover:cursor-pointer active:scale-95" onClick={() => toggleDeviceMenu()}>
                     <Image
                         className=""
                         alt="Queue"

@@ -148,6 +148,27 @@ module.exports = {
                 });
         });
     },
+    getDevices: function (spotifyClient) {
+        return new Promise(function (resolve, reject) {
+            spotifyClient.getMyDevices()
+                .then(function (data) {
+                    const availableDevices = data.body.devices;
+                    resolve(availableDevices);
+                }, function (err) {
+                    reject(err);
+                });
+        });
+    },
+    changeDevice: function (spotifyClient, deviceId) {
+        return new Promise(function (resolve, reject) {
+            spotifyClient.transferMyPlayback([deviceId])
+                .then(function () {
+                    resolve();
+                }, function (err) {
+                    reject(err);
+                });
+        });
+    },
     refreshAccessToken: function (spotifyClient) {
         return new Promise(function (resolve, reject) {
             spotifyClient.refreshAccessToken().then(
