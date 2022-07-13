@@ -52,7 +52,7 @@ export default function Clock() {
         <div className="bg-base text-text w-screen h-screen flex justify-center items-center select-none pointer-events-none">
             <div className="text-center leading-none mb-4">
                 <p className="text-[170px] font-Oswald">{time}</p>
-                <p className="font-Oswald text-3xl absolute right-7 top-[55%]">{second}</p>
+                <p className="font-Oswald text-3xl absolute right-7 top-[55%] text-overlay2">{second}</p>
                 {/* <p className="text-[175px] font-Oswald">{time}</p> */}
                 <div className="h-[3px] w-[70vw] bg-sapphire rounded-full mx-auto my-3" />
                 <p className="text-[30px] font-Kanit">{date}</p>
