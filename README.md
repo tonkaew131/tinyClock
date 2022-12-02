@@ -25,6 +25,7 @@ npm install
 Add required creditential
 
 - /secret/accuweather_token.json
+
 ```json
 {
     "core_weather": {
@@ -37,6 +38,7 @@ Add required creditential
 ```
 
 - /secret/spotify_credentials.json
+
 ```json
 {
     "client_id": "SPOTIFY_CLIEND_ID_HERE",
@@ -48,20 +50,20 @@ Add required creditential
 
 Then we the development server
 
-```
-$ npm run dev
+```bash
+npm run dev
 ```
 
 If you need to build production
 
-```
-$ npm run build
+```bash
+npm run build
 ```
 
 Then start!
 
-```
-$ npm start
+```bash
+npm start
 ```
 
 ## Contributing
