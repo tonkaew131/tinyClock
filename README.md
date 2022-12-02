@@ -1,9 +1,26 @@
-## Installing
-First we need to clone this project,
+# tinyClock
 
-``` 
-$ git clone https://github.com/tonkaew131/tinyClock.git
+Multi utilities desktop gadget devices based on [3.5 inch TFT LCD](https://www.waveshare.com/wiki/3.5inch_RPi_LCD_(B))
+
+## Getting Started
+
+This is an example of how you may give instructions on setting up your project locally. To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+
+- Clone this project
+
+```bash
+git clone https://github.com/tonkaew131/tinyClock.git
 ```
+
+- Install required package
+
+```bash
+npm install
+```
+
+### Installation
 
 Add required creditential
 
@@ -47,47 +64,14 @@ Then start!
 $ npm start
 ```
 
-## Note for me
+## Contributing
 
-Screen resolution: `480×320`
+Feel free to fix my error.
 
-Get Google API Credentials at https://console.cloud.google.com/apis/credentials
--> Create OAuth client ID
+## Authors
 
-https://github.com/catppuccin/catppuccin
+- **Athicha Leksansern** - *Initial work* - [Tonkaew](https://github.com/tonkaew131)
 
-Stocks price notify # For Wansai
+## License
 
-API:
-
-    - Calendar: [Google Calendar API](https://console.cloud.google.com/apis/credentials)
-
-    - Spotify: [Spotify Web API](https://developer.spotify.com/dashboard/applications)
-
-    - Weather: [AccuWeather API](https://developer.accuweather.com/apis)
-
-Features
-
-- Working On:
-
-    - Stop Watch / Timer
-
-- On Hold!:
-
-    - Weather (maybe integrate with external thermal/humid sensor)
-
-- Done:
-
-    - Clock (might add weather later)
-
-    - Calendar
-
-    - Spotify (basic function)
-
-- Plan:
-
-    - Radio
-
-    - PC Performance
-
-    - Notification via Bluetooth
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
