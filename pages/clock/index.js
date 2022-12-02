@@ -28,9 +28,9 @@ function getCurrentSecond() {
 }
 
 export default function Clock() {
-    const [time, setTime] = useState(formattedTime());
-    const [date, setDate] = useState(formattedDate());
-    const [second, setSecond] = useState(getCurrentSecond());
+    const [time, setTime] = useState('00:00');
+    const [date, setDate] = useState('อา. Jan. 01/01 2022');
+    const [second, setSecond] = useState('-');
 
     const intervalId = useRef();
     useEffect(() => {
@@ -51,9 +51,13 @@ export default function Clock() {
     return (
         <div className="bg-base text-text w-screen h-screen flex justify-center items-center select-none pointer-events-none">
             <div className="text-center leading-none mb-4">
+                {/* 24-Hour format */}
                 <p className="text-[170px] font-Oswald">{time}</p>
+
+                {/* Second */}
                 <p className="font-Oswald text-3xl absolute right-7 top-[55%] text-overlay2">{second}</p>
-                {/* <p className="text-[175px] font-Oswald">{time}</p> */}
+
+                {/* Date */}
                 <div className="h-[3px] w-[70vw] bg-sapphire rounded-full mx-auto my-3" />
                 <p className="text-[30px] font-Kanit">{date}</p>
             </div>
