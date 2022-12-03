@@ -6,6 +6,8 @@ import MusicLoopIcon from '../../components/MusicLoopIcon';
 import MusicShuffleIcon from '../../components/MusicShuffleIcon';
 import DeviceIcon from '../../components/DeviceIcon';
 
+import SpotifyQueue from '../../components/SpotifyQueue';
+
 // Component
 function ProgressBar(props) {
     const percent = props.percent;
@@ -119,7 +121,7 @@ function DevicesMenu(props) {
             {devices.map(d => {
                 return (
                     <div className={`ml-5 flex ${d.is_active ? 'text-blue' : ''} active:scale-[99%]`} key={d.id} onClick={() => props.changeDevice(d.id)}>
-                        <DeviceIcon type={d.type} isActive={d.is_active}/>
+                        <DeviceIcon type={d.type} isActive={d.is_active} />
                         <p className={`ml-3 my-auto ${d.is_active ? 'font-extrabold' : ''} hover:cursor-pointer`}>{d.name}</p>
                     </div>
                 );
@@ -139,26 +141,28 @@ function formatMillis(ms) {
 }
 
 export default function Spotify() {
-    const [error, setError] = useState();
+    const [error, setError] = useState(); // Error displaying
 
-    const [deviceMenu, setDeviceMenu] = useState(false);
-    const [devicesList, setDevicesList] = useState([]);
+    const [deviceMenu, setDeviceMenu] = useState(false); // Device menu display state
+    const [devicesList, setDevicesList] = useState([]); // Devices list
 
-    const [playingState, setPlayingState] = useState(false);
-    const [volume, setVolume] = useState(50);
-    const [muteVolume, setMuteVolume] = useState(50);
+    const [queueMenu, setQueueMenu] = useState(false); // Queue menu display state
 
-    const [duration, setDuration] = useState(6000000);
-    const [progress, setProgress] = useState(0);
+    const [playingState, setPlayingState] = useState(false); // Playing state
+    const [volume, setVolume] = useState(50); // Volume percentage
+    const [muteVolume, setMuteVolume] = useState(50); // Volume percentage while muted
 
-    const [progressPercent, setProgressPercent] = useState(0);
+    const [duration, setDuration] = useState(6000000); // Song duration
+    const [progress, setProgress] = useState(0); // Playing progress
 
-    const [shuffle, setShuffle] = useState(false);
-    const [loop, setLoop] = useState('off');
+    const [progressPercent, setProgressPercent] = useState(0); // Playing percentage
 
-    const [songName, setSongName] = useState('Nothing playing');
-    const [artist, setArtist] = useState('Artist');
-    const [albumCover, setAlbumCover] = useState('/placeholder_record.svg');
+    const [shuffle, setShuffle] = useState(false); // Shuffle state
+    const [loop, setLoop] = useState('off'); // Loop state
+
+    const [songName, setSongName] = useState('Nothing playing'); // Song name
+    const [artist, setArtist] = useState('Artist'); // Artist name
+    const [albumCover, setAlbumCover] = useState('/placeholder_record.svg'); // Album cover Image
 
     function togglePlayingState() {
         const state = playingState ? 'pause' : 'play';
@@ -184,6 +188,7 @@ export default function Spotify() {
     }
 
     function toggleLoop() {
+        // off, context, track
         var state = '';
 
         if (loop == 'off') state = 'context';
@@ -267,6 +272,10 @@ export default function Spotify() {
         setDeviceMenu(false);
     }
 
+    function toggleQueueMenu() {
+        setQueueMenu(!queueMenu);
+    }
+
     const intervalId = useRef();
     useEffect(() => {
         console.log('register Spotify');
@@ -332,7 +341,7 @@ export default function Spotify() {
     return (
         <div className="w-screen h-screen text-text font-Roboto select-none bg-gradient-to-br from-surface0 to-base">
             {error ? <ErrorHandler error={error} /> : undefined}
-            {deviceMenu ? <DevicesMenu devices={devicesList} changeDevice={(id) => changeDevice(id)}/> : undefined}
+            {deviceMenu ? <DevicesMenu devices={devicesList} changeDevice={(id) => changeDevice(id)} /> : undefined}
 
             <div className="flex">
                 <AlbumCover src={albumCover} />
@@ -439,7 +448,7 @@ export default function Spotify() {
                 </div>
             </div>
 
-            <div className="absolute right-5 top-5 hover:cursor-pointer active:scale-95">
+            <div className="absolute right-5 top-5 hover:cursor-pointer active:scale-95" onClick={() => toggleQueueMenu()}>
                 <div className="relative w-7 h-7">
                     <Image
                         alt="Queue"
@@ -449,6 +458,7 @@ export default function Spotify() {
                     />
                 </div>
             </div>
+            {queueMenu ? <SpotifyQueue toggleQueueMenu={toggleQueueMenu}/> : undefined}
         </div>
     )
 }
